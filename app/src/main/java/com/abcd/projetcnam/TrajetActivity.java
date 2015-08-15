@@ -25,6 +25,7 @@ public class TrajetActivity extends Activity {
         if (intent != null){
             startRoom = intent.getStringExtra("StartRoom");
             stopRoom = intent.getStringExtra("StopRoom");
+            stopRoom = intent.getStringExtra("blabla");
         }
 
         graph = new Graph();
