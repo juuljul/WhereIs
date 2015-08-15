@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">projetCnam</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="start_room_text">Enter the number of your location</string>
+    <string name="validate_rooms_btn">Ok</string>
+    <string name="room_to_reach_text">Enter the room you want to reach</string>
+</resources>
