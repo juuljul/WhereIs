@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -16,6 +17,11 @@ public class MainActivity extends ActionBarActivity {
     EditText editStartRoom, editFinishRoom;
     TextView textStartRoom, textFinishRoom;
     Button button;
+    String startRoom, stopRoom= "";
+    /*Graph graph;
+    int startIndex = 0;
+    int stopIndex =0;
+    String st = "";*/
 
 
     @Override
@@ -28,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
         textFinishRoom = (TextView) findViewById(R.id.textFinishRoom);
         textStartRoom = (TextView) findViewById(R.id.textStartRoom);
         button = (Button) findViewById(R.id.button);
+        //graph = new Graph();
 
     }
 
@@ -55,12 +62,36 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void validateRooms(View view) {
-        String startRoom = editStartRoom.getText().toString();
-        String stopRoom = editFinishRoom.getText().toString();
+        startRoom = editStartRoom.getText().toString();
+        stopRoom = editFinishRoom.getText().toString();
+
+        /*
+        for (Node node :graph.getNodes()){
+            if(node.getRoomName().equals(startRoom)){
+                startIndex = node.getIndex();
+                break;
+            }
+        }
+        for (Node node :graph.getNodes()) {
+            if (node.getRoomName().equals(stopRoom)) {
+                stopIndex = node.getIndex();
+                break;
+            }
+        }
+
+        graph.findMinimumDistance(startIndex,stopIndex);
+        for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
+            st = st + " >> " + graph.getFinalPath().get(i);
+        }
+        Toast.makeText(this, st, Toast.LENGTH_LONG).show();
+        st = "";*/
+
+
         Intent intent = new Intent(this, TrajetActivity.class);
         intent.putExtra("StartRoom",startRoom);
         intent.putExtra("StopRoom",stopRoom);
         startActivity(intent);
 
     }
+
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Graph {
     Edge [] edges;
     int numberOfNodes=15;
-    Node [] nodes;
+    Node [] nodes = new Node[15];
     int currentIndex, neighbourIndex;
     ArrayList<Integer> finalPath = new ArrayList<>();
 
@@ -37,24 +37,25 @@ public class Graph {
         Edge e18 = new Edge(6,10,8.0);
         Edge e19 = new Edge(14,0,30.0);
 
+
         edges = new Edge[]{e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15,
                 e16, e17, e18, e19};
 
-        Node n0 = new Node(0,"16", 39/48, 5/26,edges);
-        Node n1 = new Node(1,"1",18/48, 23/26 ,edges);
-        Node n2 = new Node(2,"2", 26/48, 23/26,edges);
-        Node n3 = new Node(3,"3", 10/48, 9/26,edges);
-        Node n4 = new Node(4,"4", 33/48, 23/26,edges);
-        Node n5 = new Node(5,"5", 10/48, 16/26,edges);
-        Node n6 = new Node(6,"6", 45/48, 19/26,edges);
-        Node n7 = new Node(7,"7", 10/48, 23/26,edges);
-        Node n8 = new Node(8,"9 bis", 3/48, 16/26,edges);
-        Node n9 = new Node(9,"9", 3/48, 23/26,edges);
-        Node n10 = new Node(10,"10", 39/48, 19/26,edges);
-        Node n11 = new Node(11,"11", 3/48, 9/26,edges);
-        Node n12 = new Node(12,"12", 26/48, 16/26,edges);
-        Node n13 = new Node(13,"13", 6/48, 3/26,edges);
-        Node n14 = new Node(14,"14", 33/48, 16/26,edges);
+        Node n0 = new Node(0,"16", 39, 11,edges);
+        Node n1 = new Node(1,"1",18, 23 ,edges);
+        Node n2 = new Node(2,"2", 26, 23,edges);
+        Node n3 = new Node(3,"3", 10, 9,edges);
+        Node n4 = new Node(4,"4", 33, 23,edges);
+        Node n5 = new Node(5,"5", 10, 16,edges);
+        Node n6 = new Node(6,"6", 45, 19,edges);
+        Node n7 = new Node(7,"7", 10, 23,edges);
+        Node n8 = new Node(8,"9 bis", 3, 16,edges);
+        Node n9 = new Node(9,"9", 3, 23,edges);
+        Node n10 = new Node(10,"10", 39, 19,edges);
+        Node n11 = new Node(11,"11", 3, 9,edges);
+        Node n12 = new Node(12,"12", 26, 16,edges);
+        Node n13 = new Node(13,"13", 6, 3,edges);
+        Node n14 = new Node(14,"14", 33, 16,edges);
 
         nodes = new Node[]{n0, n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14};
 
@@ -123,6 +124,7 @@ public class Graph {
             finalPath.add(stepIndex);
             stepIndex = nodes[stepIndex].getPreviousIndex();
         }
+        finalPath.add(startIndex);
         return nodes[stopIndex].getDistanceFromOrigin();
     }
 

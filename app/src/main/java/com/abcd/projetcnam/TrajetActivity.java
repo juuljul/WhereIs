@@ -11,45 +11,18 @@ import android.view.MenuItem;
  */
 public class TrajetActivity extends Activity {
         String startRoom, stopRoom;
-        Graph graph;
-        int startIndex, stopIndex;
-        MySurfaceView mySurfaceView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mySurfaceView = new MySurfaceView(this);
-        setContentView(mySurfaceView));
-
         Intent intent = getIntent();
         if (intent != null){
             startRoom = intent.getStringExtra("StartRoom");
             stopRoom = intent.getStringExtra("StopRoom");
-            stopRoom = intent.getStringExtra("blabla");
         }
+        setContentView(new MySurfaceView(this, startRoom, stopRoom));
 
-        graph = new Graph();
-        findRoomIndex();
-        graph.findMinimumDistance(startIndex,stopIndex);
-        for (int i :graph.getFinalPath()){
-
-        }
-
-    }
-
-    public void findRoomIndex(){
-        for (Node node :graph.getNodes()){
-            if(node.getRoomName()==startRoom){
-                startIndex = node.getIndex();
-                break;
-            }
-        }
-        for (Node node :graph.getNodes()) {
-            if (node.getRoomName() == stopRoom) {
-                stopIndex = node.getIndex();
-                break;
-            }
-        }
     }
 
 

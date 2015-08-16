@@ -11,6 +11,7 @@ public class Node {
     int index;
     String roomName;
     float x,y;
+    boolean red, green, blue = false;
     ArrayList <Integer> neighboursIndex= new ArrayList<Integer>();
     ArrayList <Edge> edges = new  ArrayList <Edge>();
     double distanceFromOrigin;
@@ -34,6 +35,30 @@ public class Node {
                 neighboursIndex.add(e.getFromNodeIndex());
             }
         }
+    }
+
+    public boolean isRed() {
+        return red;
+    }
+
+    public void setRed(boolean red) {
+        this.red = red;
+    }
+
+    public boolean isGreen() {
+        return green;
+    }
+
+    public void setGreen(boolean green) {
+        this.green = green;
+    }
+
+    public boolean isBlue() {
+        return blue;
+    }
+
+    public void setBlue(boolean blue) {
+        this.blue = blue;
     }
 
     public int getIndex() {
