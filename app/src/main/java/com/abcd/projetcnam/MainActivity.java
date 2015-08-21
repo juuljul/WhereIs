@@ -94,4 +94,13 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void goToAlarm(View view) {
+        Intent intent = new Intent(this, SetExamActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToAlarmCreator(View view) {
+        Intent intent = new Intent(this, MyAlarm.class);
+        startActivity(intent);
+    }
 }

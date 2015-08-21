@@ -1,6 +1,8 @@
 package com.abcd.projetcnam;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,6 +23,11 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     Graph graph;
     int startIndex, stopIndex;
     String st = "";
+    Bitmap bmp;
+    //private int x = 0;
+    private int xSpeed = 1;
+    float departX, departY, arriveeX, arriveeY, deltaX, deltaY, x, y = 0;
+    boolean arrowOnStart = true;
 
 
     public MySurfaceView(Context context, String startRoom, String stopRoom) {
@@ -28,6 +35,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         this.startRoom = startRoom;
         this.stopRoom = stopRoom;
         graph = new Graph();
+
+
+
         findRoomIndex();
         graph.findMinimumDistance(startIndex,stopIndex);
 
@@ -38,6 +48,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         drawingThread = new DrawingThread();
+        bmp = BitmapFactory.decodeResource(getResources(),R.drawable.triang30vert);
     }
 
 
@@ -141,6 +152,131 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
         canvas.drawPath(greenPath,paint);
 
+        departX = graph.getNodes()[3].getX()*getWidth()/48;
+        departY = graph.getNodes()[3].getY()*getHeight()/26;
+        arriveeX = graph.getNodes()[1].getX()*getWidth()/48;
+        arriveeY= graph.getNodes()[1].getY()*getHeight()/26;
+        deltaX = arriveeX - departX;
+        deltaY= arriveeY - departY;
+
+
+        if (arrowOnStart) {
+            x = departX;
+            y = departY;
+            arrowOnStart = false;
+        }
+
+
+        if (x < arriveeX){
+            x=x+2;
+        }
+        else {
+            arrowOnStart=true;
+        }
+        if ( y < arriveeY){
+            y = y + 2*deltaY/deltaX;
+        }
+        else {
+            arrowOnStart=true;
+        }
+        canvas.drawBitmap(bmp,x,y,null);
+
+
+        /*
+        for (int i=graph.getFinalPath().size()-1; i>0 ;i--){
+            departX= graph.getNodes()[graph.getFinalPath().get(i)].getX();
+            arriveeX = graph.getNodes()[graph.getFinalPath().get(i-1)].getX();
+            deltaX = arriveeX - departX;
+            departY = graph.getNodes()[graph.getFinalPath().get(i)].getY();
+            arriveeY = graph.getNodes()[graph.getFinalPath().get(i-1)].getY();
+            deltaY = arriveeY - departY;
+            x = departX;
+            y = departY;
+            //float speedX = (float) 0.1;
+            //float speedY = (float) 0.1;
+            if (arriveeX < departX){
+                // speedX = - speedX;
+                if (x < arriveeX){
+                       x = departX;
+                   }
+                   else{
+                       x--;
+                   }
+                if (arriveeY < departY){
+                    if (y < arriveeY){
+                        y = departY;
+                    }
+                    else {
+                        y=y-deltaY/deltaX;
+                    }
+                }
+                else if (arriveeY > departY) {
+                    if (y > arriveeY) {
+                        y = departY;
+                    } else {
+                        y =y-deltaY/deltaX;
+                    }
+                }
+                else if (arriveeY == departY){
+                    x--;
+                }
+            }
+            else if (arriveeX > departX){
+                if (x > arriveeX){
+                    x = departX;
+                }
+                else{
+                    x++;
+                }
+                if (arriveeY < departY){
+                    if (y < arriveeY){
+                        y = departY;
+                    }
+                    else {
+                        y = y+deltaY/deltaX;
+                    }
+                }
+                else if (arriveeY > departY) {
+                    if (y > arriveeY) {
+                        y = departY;
+                    } else {
+                        y =y+deltaY/deltaX;
+                    }
+                }
+                else if (arriveeY == departY){
+                    x++;
+                }
+            }
+            else if (arriveeX == departX){
+                if (arriveeY < departY){
+                    if (y < arriveeY){
+                        y = departY;
+                    }
+                    else {
+                        y--;
+                    }
+                }
+                else if (arriveeY > departY){
+                    if (y > arriveeY){
+                        y = departY;
+                    }
+                    else {
+                        y++;
+                    }
+                }
+            }
+        canvas.drawBitmap(bmp,x,y,null);
+        }*/
+
+        /*if (x == getWidth() - bmp.getWidth()) {
+            xSpeed = -1;
+        }
+        if (x == 0) {
+            xSpeed = 1;
+        }
+        x = x + xSpeed;
+        canvas.drawBitmap(bmp, x , 10, null);*/
+
 
         // Les noeuds de départ et d'arrivée sont peint en bleu
         paint.setStyle(Paint.Style.FILL);
@@ -171,7 +307,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
-
+        //invalidate();
         /*Rect ourRect = new Rect();
         ourRect.set(0,0,canvas.getWidth(),canvas.getHeight()/2);
         Paint blue = new Paint();
