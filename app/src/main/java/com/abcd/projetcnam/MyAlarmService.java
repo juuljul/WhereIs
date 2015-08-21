@@ -30,7 +30,7 @@ public class MyAlarmService extends Service
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this.getApplicationContext(),MyAlarm.class);
         //PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,3,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,MyAlarm.i,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new Notification.Builder(this)
                 .setContentTitle("Mon titre")
@@ -38,8 +38,10 @@ public class MyAlarmService extends Service
                 .setSmallIcon(R.drawable.triang30vert)
                 .setContentIntent(pendingIntent)
                 //.addAction(0, "Load Website",pendingIntent)
+                //.addAction( R.drawable.triang30vert, "Call", pendingIntent )
+                //.addAction( R.drawable.triang30vert, "More", pendingIntent )
                 .build();
-        notificationManager.notify(3,notification);
+        notificationManager.notify(MyAlarm.i,notification);
 
     }
 
