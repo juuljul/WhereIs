@@ -2,19 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.abcd.projetcnam" >
 
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <!-- Permission to Send SMS -->
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -34,28 +29,25 @@
             android:name=".TrajetActivity"
             android:label="TrajetActivity" >
         </activity>
-        <activity
-            android:name=".MedicineAlarm"
-             >
+        <activity android:name=".MedicineAlarm" >
         </activity>
-        <activity
-            android:name=".SetExamActivity"
-            >
+        <activity android:name=".SetExamActivity" >
         </activity>
-        <activity
-            android:name=".AlarmCreator"
-            >
+        <activity android:name=".AlarmCreator" >
         </activity>
-        <activity
-            android:name=".MyAlarm"
-            >
+        <activity android:name=".MyAlarm" >
         </activity>
 
-        <service android:name=".MyAlarmService"
+        <service
+            android:name=".MyAlarmService"
             android:enabled="true" />
 
-        <receiver android:name=".AlarmReceiver"/>
+        <receiver android:name=".AlarmReceiver" />
 
+        <activity
+            android:name=".ScheduleActivity"
+            android:label="@string/title_activity_schedule" >
+        </activity>
     </application>
 
 </manifest>

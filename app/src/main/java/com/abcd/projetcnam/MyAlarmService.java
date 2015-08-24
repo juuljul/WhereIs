@@ -12,7 +12,8 @@ public class MyAlarmService extends Service
 {
 
     //private NotificationManager mManager;
-    private NotificationManager notificationManager;
+    //private NotificationManager notificationManager;
+    //PendingIntent pendingIntent;
 
     @Override
     public IBinder onBind(Intent arg0)
@@ -27,7 +28,25 @@ public class MyAlarmService extends Service
         // TODO Auto-generated method stub
         super.onCreate();
 
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        /*for (int j=0;j<MyAlarm.i;j++){
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            Intent intent = new Intent(this.getApplicationContext(),MyAlarm.class);
+            //PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,j,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Notification notification = new Notification.Builder(this)
+                    .setContentTitle("Mon titre")
+                    .setContentText("Mon texte")
+                    .setSmallIcon(R.drawable.triang30vert)
+                    .setContentIntent(pendingIntent)
+                            //.addAction(0, "Load Website",pendingIntent)
+                            //.addAction( R.drawable.triang30vert, "Call", pendingIntent )
+                            //.addAction( R.drawable.triang30vert, "More", pendingIntent )
+                    .build();
+            notificationManager.notify(j,notification);
+        }*/
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this.getApplicationContext(),MyAlarm.class);
         //PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,MyAlarm.i,intent,PendingIntent.FLAG_UPDATE_CURRENT);
@@ -37,11 +56,13 @@ public class MyAlarmService extends Service
                 .setContentText("Mon texte")
                 .setSmallIcon(R.drawable.triang30vert)
                 .setContentIntent(pendingIntent)
-                //.addAction(0, "Load Website",pendingIntent)
-                //.addAction( R.drawable.triang30vert, "Call", pendingIntent )
-                //.addAction( R.drawable.triang30vert, "More", pendingIntent )
+                        //.addAction(0, "Load Website",pendingIntent)
+                        //.addAction( R.drawable.triang30vert, "Call", pendingIntent )
+                        //.addAction( R.drawable.triang30vert, "More", pendingIntent )
                 .build();
         notificationManager.notify(MyAlarm.i,notification);
+
+
 
     }
 
@@ -68,6 +89,7 @@ public class MyAlarmService extends Service
     public void onDestroy()
     {
         // TODO Auto-generated method stub
+        //MyAlarm.alarmManager.cancel(MyAlarm.pendingIntent);
         super.onDestroy();
     }
 

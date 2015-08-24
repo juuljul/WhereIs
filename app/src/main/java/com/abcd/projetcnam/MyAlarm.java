@@ -1,6 +1,7 @@
 package com.abcd.projetcnam;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -24,7 +25,7 @@ import android.widget.ToggleButton;
 public class MyAlarm extends Activity
 {
 
-    private PendingIntent pendingIntent;
+    PendingIntent pendingIntent;
     Uri sound;
 
     private Button button;
@@ -34,7 +35,11 @@ public class MyAlarm extends Activity
     TextView matiereText, dateText, roomText;
     Calendar cal;
     TimePickerDialog timePicker;
-    public static int i=5;
+    static AlarmManager alarmManager;
+    public static int i=0;
+
+    ArrayList <Calendar> calendarArrayList = new ArrayList<>();
+    //ArrayList<PendingIntent> pendingIntentArrayList = new ArrayList<>();
 
 
     @Override
@@ -52,7 +57,7 @@ public class MyAlarm extends Activity
         roomText = (TextView) findViewById(R.id.roomText);
         button = (Button) findViewById(R.id.button);
 
-        cal = Calendar.getInstance();
+        //cal = Calendar.getInstance();
 
 
         /*Calendar calendar = Calendar.getInstance();
@@ -107,6 +112,8 @@ public class MyAlarm extends Activity
     public void dateOnClick( View view ) {
         //Alarm am = (Alarm)view.getTag();
         //currentAlarm = am;
+        cal = Calendar.getInstance();
+
         timePicker = new TimePickerDialog(this, time,
                 cal.get( Calendar.HOUR ),
                 cal.get( Calendar.MINUTE ), false );
@@ -127,15 +134,30 @@ public class MyAlarm extends Activity
     public void activateAlarm(View view) {
 
         i++;
+        calendarArrayList.add(cal);
 
-        sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        //sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         Intent myIntent = new Intent(MyAlarm.this, AlarmReceiver.class);
 
+        myIntent.setData(Uri.parse("alarm:" + i));
+        //myIntent.setAction(String.valueOf(i));
+
         pendingIntent = PendingIntent.getBroadcast(MyAlarm.this, i, myIntent,PendingIntent.FLAG_CANCEL_CURRENT);
 
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent);
+
+        //pendingIntentArrayList.add(pendingIntent);
+
+        /*for (int j=0;j<i;j++){
+            alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC, calendarArrayList.get(j).getTimeInMillis(), pendingIntentArrayList.get(j));
+        }*/
+
+        //AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
 
 
     }

@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by julien on 11/08/2015.
@@ -28,6 +31,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private int xSpeed = 1;
     float departX, departY, arriveeX, arriveeY, deltaX, deltaY, x, y = 0;
     boolean arrowOnStart = true;
+    ArrayList <Boolean> arrowsOnStart = new ArrayList<>();
+    ArrayList <Float> xArrow = new ArrayList<>();
+    ArrayList <Float> yArrow = new ArrayList<>();
+    float speed = 10;
 
 
     public MySurfaceView(Context context, String startRoom, String stopRoom) {
@@ -42,13 +49,20 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         graph.findMinimumDistance(startIndex,stopIndex);
 
         for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
+            arrowsOnStart.add(true);
+            xArrow.add((float) 0);
+            yArrow.add((float) 0);
+
+        }
+
+        for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
             st = st + " >> " + graph.getFinalPath().get(i);
         }
         Toast.makeText(context,st,Toast.LENGTH_LONG).show();
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         drawingThread = new DrawingThread();
-        bmp = BitmapFactory.decodeResource(getResources(),R.drawable.triang30vert);
+        bmp = BitmapFactory.decodeResource(getResources(),R.drawable.fleches10x30);
     }
 
 
@@ -152,7 +166,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
         canvas.drawPath(greenPath,paint);
 
-        departX = graph.getNodes()[3].getX()*getWidth()/48;
+        /*departX = graph.getNodes()[3].getX()*getWidth()/48;
         departY = graph.getNodes()[3].getY()*getHeight()/26;
         arriveeX = graph.getNodes()[1].getX()*getWidth()/48;
         arriveeY= graph.getNodes()[1].getY()*getHeight()/26;
@@ -179,7 +193,121 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         else {
             arrowOnStart=true;
         }
-        canvas.drawBitmap(bmp,x,y,null);
+        canvas.drawBitmap(bmp,x,y,null);*/
+
+
+
+
+
+        for (int i=graph.getFinalPath().size()-1; i>0 ;i--){
+            departX= graph.getNodes()[graph.getFinalPath().get(i)].getX()*getWidth()/48;
+            arriveeX = graph.getNodes()[graph.getFinalPath().get(i-1)].getX()*getWidth()/48;
+            deltaX = arriveeX - departX;
+            departY = graph.getNodes()[graph.getFinalPath().get(i)].getY()*getHeight()/26;
+            arriveeY = graph.getNodes()[graph.getFinalPath().get(i-1)].getY()*getHeight()/26;
+            deltaY = arriveeY - departY;
+
+
+            if (arrowsOnStart.get(i)){
+                xArrow.set(i, departX);
+                yArrow.set(i,departY);
+                arrowsOnStart.set(i,false);
+            }
+
+            if (arriveeX < departX){
+                if (xArrow.get(i) - bmp.getWidth()/2 < arriveeX){
+                    arrowsOnStart.set(i,true);
+                }
+                else{
+                    xArrow.set(i,xArrow.get(i)-speed);
+                }
+                if (arriveeY < departY){
+                    if (yArrow.get(i) - bmp.getHeight()/2 < arriveeY){
+                        arrowsOnStart.set(i,true);
+                    }
+                    else {
+                        yArrow.set(i,yArrow.get(i)-speed*deltaY/deltaX);
+                    }
+                }
+                else if (arriveeY > departY) {
+                    if (yArrow.get(i) + bmp.getHeight()/2 > arriveeY) {
+                        arrowsOnStart.set(i,true);
+                    } else {
+                        yArrow.set(i,yArrow.get(i)-speed*deltaY/deltaX);
+                    }
+                }
+            }
+            else if (arriveeX > departX){
+                if (xArrow.get(i) + bmp.getWidth()/2 > arriveeX){
+                    arrowsOnStart.set(i,true);
+                }
+                else{
+                    xArrow.set(i,xArrow.get(i)+speed);
+                }
+                if (arriveeY < departY){
+                    if (yArrow.get(i) - bmp.getHeight()/2 < arriveeY){
+                        arrowsOnStart.set(i,true);
+                    }
+                    else {
+                        yArrow.set(i,yArrow.get(i)+speed*deltaY/deltaX);
+                    }
+                }
+                else if (arriveeY > departY) {
+                    if (yArrow.get(i)+bmp.getHeight()/2 > arriveeY) {
+                        arrowsOnStart.set(i,true);
+                    } else {
+                        yArrow.set(i,yArrow.get(i)+speed*deltaY/deltaX);
+                    }
+                }
+            }
+            else if (arriveeX == departX){
+                if (arriveeY < departY){
+                    if (yArrow.get(i) - bmp.getWidth()/2 < arriveeY){
+                        arrowsOnStart.set(i,true);
+                    }
+                    else {
+                        yArrow.set(i,yArrow.get(i)-speed);
+                    }
+                }
+                else if (arriveeY > departY){
+                    if (yArrow.get(i) + bmp.getWidth()/2 > arriveeY){
+                        arrowsOnStart.set(i,true);
+                    }
+                    else {
+                        yArrow.set(i,yArrow.get(i)+speed);
+                    }
+                }
+            }
+
+            float h = (float) Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+
+            /*Matrix matrix = new Matrix();
+            matrix.setSinCos(deltaY/h,deltaX/h,xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2);
+            canvas.drawBitmap(bmp, matrix, null);*/
+
+
+
+            /*Matrix matrix2 = new Matrix();
+            matrix2.setRotate((float) Math.toDegrees(Math.atan(deltaY/deltaX)),
+                    xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2);
+            canvas.drawBitmap(bmp, matrix2, null);*/
+
+
+            double angle = Math.atan(deltaY/deltaX);
+            if (deltaX<0){
+                angle = angle + Math.PI;
+            }
+
+            canvas.save();
+            canvas.rotate((float) Math.toDegrees(angle),
+                    xArrow.get(i),yArrow.get(i));
+            canvas.drawBitmap(bmp,xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2,null);
+            canvas.restore();
+
+            //canvas.drawBitmap(bmp,xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2,null);
+        }
+
+
 
 
         /*
