@@ -41,6 +41,8 @@ public class MyAlarm extends Activity
     ArrayList <Calendar> calendarArrayList = new ArrayList<>();
     //ArrayList<PendingIntent> pendingIntentArrayList = new ArrayList<>();
 
+    DbHelperAdapter dbAdapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -159,6 +161,19 @@ public class MyAlarm extends Activity
         //AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
 
+
+    }
+
+    public void registerData(View view) {
+        dbAdapter = new DbHelperAdapter(this);
+        dbAdapter.insertData(editMatiere.getText().toString(),editRoom.getText().toString(),
+                editDate.getText().toString());
+
+    }
+
+    public void visitData(View view) {
+        Intent intent = new Intent(this, ScheduleActivity.class);
+        startActivity(intent);
 
     }
 }

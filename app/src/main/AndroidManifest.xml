@@ -37,6 +37,10 @@
         </activity>
         <activity android:name=".MyAlarm" >
         </activity>
+        <activity
+            android:name=".ScheduleActivity"
+            android:label="@string/title_activity_schedule" >
+        </activity>
 
         <service
             android:name=".MyAlarmService"
@@ -44,10 +48,7 @@
 
         <receiver android:name=".AlarmReceiver" />
 
-        <activity
-            android:name=".ScheduleActivity"
-            android:label="@string/title_activity_schedule" >
-        </activity>
+
     </application>
 
 </manifest>
