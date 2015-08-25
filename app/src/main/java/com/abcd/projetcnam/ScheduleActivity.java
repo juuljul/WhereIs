@@ -13,20 +13,23 @@ import android.widget.TextView;
 
 public class ScheduleActivity extends ActionBarActivity {
 
-    DbHelperAdapter dbAdapter;
-    TextView scheduleText;
+    //DbHelperAdapter dbAdapter;
+    //TextView scheduleText;
     ListView listView;
-    ListAdapter listAdapter;
+    MyBaseAdapter myBaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        dbAdapter = new DbHelperAdapter(this);
-        scheduleText = (TextView) findViewById(R.id.scheduleText);
-        scheduleText.setText(dbAdapter.getAllData());
+        //dbAdapter = new DbHelperAdapter(this);
+        //scheduleText = (TextView) findViewById(R.id.scheduleText);
+        //scheduleText.setText(dbAdapter.getAllData());
 
-        listView = new ListView(this);
+        listView = (ListView) findViewById(R.id.listView);
+        myBaseAdapter = new MyBaseAdapter(this);
+        listView.setAdapter(myBaseAdapter);
+
 
 
 

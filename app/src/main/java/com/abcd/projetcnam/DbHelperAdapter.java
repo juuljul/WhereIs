@@ -7,11 +7,18 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by julien on 01/05/2015.
  */
 public class DbHelperAdapter {
     DbHelper helper;
+
+
+    ArrayList <String> matiereArray = new ArrayList<>();
+    ArrayList <String> heureArray = new ArrayList<>();
+    ArrayList <String> accessArray = new ArrayList<>();
 
 
     public void insertData(String codeMatiere, String acces, String date){
@@ -22,6 +29,38 @@ public class DbHelperAdapter {
         contentValues.put(DbHelper.DATEEXAM,date);
         db.insert(DbHelper.TABLE_NAME,null, contentValues);
     }
+
+
+    public void updateArrays(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String [] columns = {DbHelper.MATIERE,DbHelper.ROOMNUMBER,DbHelper.DATEEXAM};
+        Cursor cursor = db.query(DbHelper.TABLE_NAME, columns, null,null, null, null, null);
+        while(cursor.moveToNext()){
+            int index1 = cursor.getColumnIndex(DbHelper.MATIERE);
+            String matiere= cursor.getString(index1);
+            matiereArray.add(matiere);
+            int index2 = cursor.getColumnIndex(DbHelper.ROOMNUMBER);
+            String accesNumber = cursor.getString(index2);
+            accessArray.add(accesNumber);
+            int index3= cursor.getColumnIndex(DbHelper.DATEEXAM);
+            String dateEx = cursor.getString(index3);
+            heureArray.add(dateEx);
+        }
+    }
+
+
+    public ArrayList<String> getMatiereArray() {
+        return matiereArray;
+    }
+
+    public ArrayList<String> getHeureArray() {
+        return heureArray;
+    }
+
+    public ArrayList<String> getAccessArray() {
+        return accessArray;
+    }
+
 
 
     /*public String getData(String name){
