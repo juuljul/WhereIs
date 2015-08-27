@@ -86,7 +86,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         super.onDraw(canvas);
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
+        //paint.setColor(Color.WHITE);
+        paint.setColor(Color.parseColor("#ff3a3a3a"));
         canvas.drawPaint(paint);
         // Use Color.parseColor to define HTML colors
         /*paint.setColor(Color.parseColor("#CD5C5C"));
@@ -152,7 +153,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
         canvas.drawPath(blackPath,paint);
 
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.WHITE);
         Path greenPath = new Path();
 
         for (Edge edge : graph.getEdges()){
@@ -416,8 +417,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         graph.getNodes()[startIndex].setBlue(true);
         graph.getNodes()[stopIndex].setBlue(true);
 
-        // Les noeuds de trajet intermédiaires sont peints en vert
-        paint.setColor(Color.GREEN);
+        // Les noeuds de trajet intermédiaires sont peints en blanc
+        paint.setColor(Color.WHITE);
         for (int i :graph.getFinalPath()){
             if (!graph.getNodes()[i].isBlue()){
                 canvas.drawCircle(getWidth()*graph.getNodes()[i].getX()/48,
@@ -426,13 +427,22 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
-        // Si les noeuds n'appartiennent pas au trajet final, ils sont peints en rouge
-        paint.setColor(Color.parseColor("#CD5C5C"));
+        // Si les noeuds n'appartiennent pas au trajet final, ils sont peints en noir
+        //paint.setColor(Color.parseColor("#CD5C5C"));
+        paint.setColor(Color.BLACK);
         for (Node node :graph.getNodes()){
             if (!node.isBlue() && !node.isGreen()){
                 canvas.drawCircle(getWidth()*node.getX()/48,
                         getHeight()*node.getY()/26,getWidth()/48, paint);
             }
+        }
+
+        // Affichage des numéros des différents accès
+        paint.setColor(Color.GRAY);
+        paint.setTextSize(20);
+        for (Node node :graph.getNodes()){
+            canvas.drawText(node.getRoomName(),getWidth()*node.getX()/48,
+                    getHeight()*node.getY()/26,paint);
         }
 
         //invalidate();

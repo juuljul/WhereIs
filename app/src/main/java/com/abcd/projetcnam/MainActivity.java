@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void goToAlarm(View view) {
-        Intent intent = new Intent(this, SetExamActivity.class);
+        Intent intent = new Intent(this, DestinationActivity.class);
         startActivity(intent);
     }
 

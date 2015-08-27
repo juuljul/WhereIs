@@ -7,4 +7,26 @@
     <string name="validate_rooms_btn">Ok</string>
     <string name="room_to_reach_text">Enter the room you want to reach</string>
     <string name="title_activity_schedule">ScheduleActivity</string>
+    <string name="title_activity_destination">DestinationActivity</string>
+    
+    <string-array name="salles">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>9</item>
+        <item>9 bis</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>16</item>
+    </string-array>
+    <string name="title_activity_location">LocationActivity</string>
+    
+    
 </resources>

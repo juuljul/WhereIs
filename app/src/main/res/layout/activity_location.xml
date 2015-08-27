@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.abcd.projetcnam.LocationActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/textDestination"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vous n'êtes pas encore au Cnam ? Le bâtiment se situe au
+         292 rue Saint Martin, 75003 Paris"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/textDestination"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Localiser l'adresse avec Google Maps"
+        android:onClick="goToMap"
+        android:id="@+id/button5"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vous êtes déjà au Cnam ! Devant quel accès vous situez-vous?
+        (Si vous êtes à l'entrée du bâtiment, choisissez le 1"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/button5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="47dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calculer le trajet le plus court"
+        android:id="@+id/button6"
+        android:onClick="goToTrajet"
+        android:layout_below="@+id/spinner"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vous êtes devant un QR code ! Scannez le pour calculer votre trajet"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/button6"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan Bar"
+        android:id="@+id/button7"
+        android:layout_below="@+id/textView4"
+        android:onClick="scanBar"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan QR"
+        android:id="@+id/button8"
+        android:layout_below="@+id/button7"
+        android:onClick="scanQR"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

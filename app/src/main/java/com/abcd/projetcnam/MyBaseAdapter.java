@@ -55,16 +55,18 @@ public class MyBaseAdapter extends BaseAdapter {
         TextView heureText = (TextView) row.findViewById(R.id.heureText);
         Button accessBtn = (Button) row.findViewById(R.id.accessBtn);
 
-        SingleRow temp = list.get(position);
+        final SingleRow temp = list.get(position);
 
         matiereText.setText(temp.matiere);
         heureText.setText(temp.hour);
-        accessBtn.setText("Go to"+ temp.access);
+        accessBtn.setText("ACCES  "+ temp.access);
 
         accessBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,MainActivity.class);
+                Intent intent = new Intent(context, TrajetActivity.class);
+                intent.putExtra("StartRoom","2");
+                intent.putExtra("StopRoom",temp.access);
                 context.startActivity(intent);
             }
         });

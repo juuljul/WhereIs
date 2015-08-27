@@ -8,6 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Matiere enseignee"
+        android:textAppearance="?android:textAppearanceMedium"
         android:id="@+id/matiereText"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal" />
@@ -23,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date et heure "
+        android:textAppearance="?android:textAppearanceMedium"
         android:id="@+id/dateText"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal" />
@@ -38,40 +40,42 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
         android:text="Numero de l acces"
         android:id="@+id/roomText"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editRoom"
-        android:layout_marginBottom="40dp"
-        android:layout_gravity="center_horizontal" />
 
-    <Button
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Activate Alarm"
+        android:id="@+id/spinner"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+
+        />
+
+
+    <Button
+        style="@style/bluebutton"
+        android:text="ACTIVER L'ALARME"
         android:id="@+id/button"
         android:onClick="activateAlarm"
         android:layout_marginBottom="30dp"
         android:layout_gravity="center_horizontal" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enregistrer dans la base de donnees"
+        style="@style/bluebutton.petit"
+        android:text="ENREGISTRER DANS L'EMPLOI DU TEMPS"
         android:id="@+id/buttonRegister"
         android:layout_marginBottom="30dp"
         android:onClick="registerData"
         android:layout_gravity="center_horizontal" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Visiter la base de donnees"
+        style="@style/bluebutton.petit"
+        android:text="CONSULTER L'EMPLOI DU TEMPS"
         android:id="@+id/buttonData"
         android:onClick="visitData"
         android:layout_gravity="center_horizontal" />

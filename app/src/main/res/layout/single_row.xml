@@ -19,8 +19,8 @@
         android:id="@+id/heureText" />
 
     <Button
+        style="@style/bluebutton.petit"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:text=""
         android:layout_weight="30"
         android:id="@+id/accessBtn" />

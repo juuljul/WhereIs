@@ -15,9 +15,11 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
@@ -31,7 +33,8 @@ public class MyAlarm extends Activity
     private Button button;
     private EditText editMatiere;
     private EditText editDate;
-    private EditText editRoom;
+    Spinner spinner;
+    ArrayAdapter arrayAdapter;
     TextView matiereText, dateText, roomText;
     Calendar cal;
     TimePickerDialog timePicker;
@@ -52,12 +55,17 @@ public class MyAlarm extends Activity
         setContentView(R.layout.my_alarm);
 
         editDate = (EditText) findViewById(R.id.editDate);
-        editRoom = (EditText) findViewById(R.id.editRoom);
         editMatiere = (EditText) findViewById(R.id.editMatiere);
         matiereText = (TextView) findViewById(R.id.matiereText);
         dateText = (TextView) findViewById(R.id.dateText);
         roomText = (TextView) findViewById(R.id.roomText);
         button = (Button) findViewById(R.id.button);
+
+
+        // A remplacer éventuellement par un autocompleteTextView
+        spinner = (Spinner) findViewById(R.id.spinner);
+        arrayAdapter = ArrayAdapter.createFromResource(this,R.array.salles, R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
 
         //cal = Calendar.getInstance();
 
@@ -166,7 +174,7 @@ public class MyAlarm extends Activity
 
     public void registerData(View view) {
         dbAdapter = new DbHelperAdapter(this);
-        dbAdapter.insertData(editMatiere.getText().toString(),editRoom.getText().toString(),
+        dbAdapter.insertData(editMatiere.getText().toString(),spinner.getSelectedItem().toString(),
                 editDate.getText().toString());
 
     }
