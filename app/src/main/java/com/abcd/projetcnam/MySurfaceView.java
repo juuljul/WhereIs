@@ -9,20 +9,23 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.speech.tts.TextToSpeech;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by julien on 11/08/2015.
  */
-public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
 
     SurfaceHolder surfaceHolder;
     DrawingThread drawingThread;
     String startRoom, stopRoom;
+
     Graph graph;
     int startIndex, stopIndex;
     String st = "";
@@ -36,6 +39,11 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     ArrayList <Float> yArrow = new ArrayList<>();
     float speed = 10;
 
+    double longueurTrajet =0;
+
+
+
+
 
     public MySurfaceView(Context context, String startRoom, String stopRoom) {
         super(context);
@@ -46,7 +54,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
 
         findRoomIndex();
-        graph.findMinimumDistance(startIndex,stopIndex);
+        longueurTrajet = graph.findMinimumDistance(startIndex,stopIndex);
 
         for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
             arrowsOnStart.add(true);
@@ -63,6 +71,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         surfaceHolder.addCallback(this);
         drawingThread = new DrawingThread();
         bmp = BitmapFactory.decodeResource(getResources(),R.drawable.fleches10x30);
+
+
     }
 
 
@@ -441,9 +451,11 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         paint.setColor(Color.GRAY);
         paint.setTextSize(20);
         for (Node node :graph.getNodes()){
-            canvas.drawText(node.getRoomName(),getWidth()*node.getX()/48,
-                    getHeight()*node.getY()/26,paint);
+            canvas.drawText(node.getRoomName(), getWidth() * node.getX() / 48,
+                    getHeight() * node.getY() / 26, paint);
         }
+
+
 
         //invalidate();
         /*Rect ourRect = new Rect();
@@ -482,6 +494,19 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
     }
+
+
+    public Graph getGraph() {
+        return graph;
+    }
+
+
+    public double getLongueurTrajet() {
+        return longueurTrajet;
+    }
+
+
+
 
     private class DrawingThread extends Thread {
         boolean keepDrawing = true;

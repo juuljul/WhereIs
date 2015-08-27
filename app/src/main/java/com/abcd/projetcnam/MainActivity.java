@@ -1,6 +1,7 @@
 package com.abcd.projetcnam;
 
 import android.content.Intent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,17 +12,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends ActionBarActivity implements TextToSpeech.OnInitListener {
 
     EditText editStartRoom, editFinishRoom;
     TextView textStartRoom, textFinishRoom;
     Button button;
     String startRoom, stopRoom= "";
+
     /*Graph graph;
     int startIndex = 0;
     int stopIndex =0;
     String st = "";*/
+
+    private TextToSpeech textToSpeech;
+    private Locale currentSpokenLang = Locale.FRENCH;
 
 
     @Override
@@ -34,8 +41,19 @@ public class MainActivity extends ActionBarActivity {
         textFinishRoom = (TextView) findViewById(R.id.textFinishRoom);
         textStartRoom = (TextView) findViewById(R.id.textStartRoom);
         button = (Button) findViewById(R.id.button);
+
+        textToSpeech = new TextToSpeech(this, this);
         //graph = new Graph();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 
 
@@ -102,5 +120,47 @@ public class MainActivity extends ActionBarActivity {
     public void goToAlarmCreator(View view) {
         Intent intent = new Intent(this, MyAlarm.class);
         startActivity(intent);
+    }
+
+    public void speakText(View view) {
+
+        // Set the voice to use
+        textToSpeech.setLanguage(currentSpokenLang);
+
+        // Check that translations are in the array
+        /*if (arrayOfTranslations.length >= 9){
+
+            // There aren't voices for our first 3 languages so skip them
+            // QUEUE_FLUSH deletes previous text to read and replaces it
+            // with new text
+            textToSpeech.speak(arrayOfTranslations[spinnerIndex+4], TextToSpeech.QUEUE_FLUSH, null);
+
+        } else {
+
+            Toast.makeText(this, "Translate Text First", Toast.LENGTH_SHORT).show();
+
+        }*/
+        textToSpeech.speak(editStartRoom.getText().toString(),TextToSpeech.QUEUE_FLUSH, null);
+
+
+
+    }
+
+    @Override
+    public void onInit(int status) {
+        // Check if TextToSpeech is available
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = textToSpeech.setLanguage(currentSpokenLang);
+
+            // If language data or a specific language isn't available error
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(this, "Language Not Supported", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(this, "Text To Speech Failed", Toast.LENGTH_SHORT).show();
+        }
     }
 }
