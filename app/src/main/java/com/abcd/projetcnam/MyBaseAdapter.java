@@ -67,6 +67,7 @@ public class MyBaseAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, TrajetActivity.class);
                 intent.putExtra("StartRoom","2");
                 intent.putExtra("StopRoom",temp.access);
+                intent.putExtra("DynamicPlan",true);
                 context.startActivity(intent);
             }
         });

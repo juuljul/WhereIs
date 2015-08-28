@@ -73,6 +73,16 @@
         android:id="@+id/button9"
         android:layout_below="@+id/button3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp" />
+        android:layout_marginTop="27dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to StaticPLan"
+        android:id="@+id/button10"
+        android:layout_below="@+id/button9"
+        android:onClick="gotoStaticPLan"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

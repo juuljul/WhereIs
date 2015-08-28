@@ -155,6 +155,7 @@ public class LocationActivity extends ActionBarActivity {
         Intent intent = new Intent(this, TrajetActivity.class);
         intent.putExtra("StartRoom",spinner.getSelectedItem().toString());
         intent.putExtra("StopRoom",roomDestination);
+        intent.putExtra("DynamicPlan",true);
         startActivity(intent);
 
     }

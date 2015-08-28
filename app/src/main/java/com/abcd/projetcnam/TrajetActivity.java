@@ -20,6 +20,8 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
     String cheminSpeech = "";
     String chemin="";
 
+    boolean isPlanDynamic = false;
+
     private TextToSpeech textToSpeech;
     private Locale currentSpokenLang = Locale.FRENCH;
 
@@ -34,31 +36,35 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
         if (intent != null){
             startRoom = intent.getStringExtra("StartRoom");
             stopRoom = intent.getStringExtra("StopRoom");
+            isPlanDynamic = intent.getBooleanExtra("DynamicPlan",false);
         }
-        mySurfaceView = new MySurfaceView(this, startRoom,stopRoom);
+        mySurfaceView = new MySurfaceView(this, startRoom,stopRoom,isPlanDynamic);
         setContentView(mySurfaceView);
 
-        textToSpeech = new TextToSpeech(this,this);
+        if (isPlanDynamic){
+            textToSpeech = new TextToSpeech(this,this);
 
 
-        for (int i=mySurfaceView.getGraph().getFinalPath().size()-1; i>=0 ;i--){
-            chemin = chemin +mySurfaceView.getGraph().getFinalPath().get(i)+", ";
+            for (int i=mySurfaceView.getGraph().getFinalPath().size()-1; i>=0 ;i--){
+                chemin = chemin +mySurfaceView.getGraph().getFinalPath().get(i)+", ";
+            }
+
+            cheminSpeech = "Pour atteindre l'accès numéro" + mySurfaceView.getGraph().getFinalPath().get(0) +
+                    "Vous devez successivement passer par les accès numéros" + chemin +
+                    "le chemin total se fait à la marche en " + mySurfaceView.getLongueurTrajet() + "pas";
+
         }
-
-        cheminSpeech = "Pour atteindre l'accès numéro" + mySurfaceView.getGraph().getFinalPath().get(0) +
-                "Vous devez successivement passer par les accès numéros" + chemin +
-                "le chemin total se fait à la marche en " + mySurfaceView.getLongueurTrajet() + "pas";
-
-
 
 
     }
 
     @Override
     protected void onDestroy() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-            textToSpeech.shutdown();
+        if (isPlanDynamic){
+            if (textToSpeech != null) {
+                textToSpeech.stop();
+                textToSpeech.shutdown();
+            }
         }
         super.onDestroy();
     }
@@ -66,8 +72,10 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        textToSpeech.setLanguage(currentSpokenLang);
-        textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
+        if (isPlanDynamic){
+            textToSpeech.setLanguage(currentSpokenLang);
+            textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
+        }
         return super.onTouchEvent(event);
     }
 

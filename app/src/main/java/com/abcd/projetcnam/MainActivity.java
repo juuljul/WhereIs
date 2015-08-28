@@ -108,6 +108,7 @@ public class MainActivity extends ActionBarActivity implements TextToSpeech.OnIn
         Intent intent = new Intent(this, TrajetActivity.class);
         intent.putExtra("StartRoom",startRoom);
         intent.putExtra("StopRoom",stopRoom);
+        intent.putExtra("DynamicPlan",true);
         startActivity(intent);
 
     }
@@ -162,5 +163,10 @@ public class MainActivity extends ActionBarActivity implements TextToSpeech.OnIn
         } else {
             Toast.makeText(this, "Text To Speech Failed", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void gotoStaticPLan(View view) {
+        Intent intent = new Intent(this, TrajetActivity.class);
+        startActivity(intent);
     }
 }

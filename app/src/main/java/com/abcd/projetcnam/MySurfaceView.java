@@ -28,49 +28,44 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     Graph graph;
     int startIndex, stopIndex;
-    String st = "";
     Bitmap bmp;
-    //private int x = 0;
-    private int xSpeed = 1;
-    float departX, departY, arriveeX, arriveeY, deltaX, deltaY, x, y = 0;
-    boolean arrowOnStart = true;
+    float departX, departY, arriveeX, arriveeY, deltaX, deltaY = 0;
+
+    // Booléens à true si le bitmap est en position de départ, false sinon
     ArrayList <Boolean> arrowsOnStart = new ArrayList<>();
+
+    // Coordonnées du bitmap en déplacement
     ArrayList <Float> xArrow = new ArrayList<>();
     ArrayList <Float> yArrow = new ArrayList<>();
-    float speed = 10;
 
+    float speed = 10;
     double longueurTrajet =0;
 
+    boolean isPlanDynamic = true;
 
 
-
-
-    public MySurfaceView(Context context, String startRoom, String stopRoom) {
+    public MySurfaceView(Context context, String startRoom, String stopRoom, boolean isPlanDynamic) {
         super(context);
         this.startRoom = startRoom;
         this.stopRoom = stopRoom;
+        this.isPlanDynamic = isPlanDynamic;
         graph = new Graph();
 
+        if (isPlanDynamic) {
+            findRoomIndex();
+            longueurTrajet = graph.findMinimumDistance(startIndex,stopIndex);
 
-
-        findRoomIndex();
-        longueurTrajet = graph.findMinimumDistance(startIndex,stopIndex);
-
-        for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
-            arrowsOnStart.add(true);
-            xArrow.add((float) 0);
-            yArrow.add((float) 0);
-
+            for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
+                arrowsOnStart.add(true);
+                xArrow.add((float) 0);
+                yArrow.add((float) 0);
+            }
+            bmp = BitmapFactory.decodeResource(getResources(),R.drawable.fleches10x30);
         }
 
-        for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
-            st = st + " >> " + graph.getFinalPath().get(i);
-        }
-        Toast.makeText(context,st,Toast.LENGTH_LONG).show();
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         drawingThread = new DrawingThread();
-        bmp = BitmapFactory.decodeResource(getResources(),R.drawable.fleches10x30);
 
 
     }
@@ -91,55 +86,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        //paint.setColor(Color.WHITE);
-        paint.setColor(Color.parseColor("#ff3a3a3a"));
-        canvas.drawPaint(paint);
-        // Use Color.parseColor to define HTML colors
-        /*paint.setColor(Color.parseColor("#CD5C5C"));
-        //paint.setColor(0xCD5C5C);
-        //canvas.drawCircle((float)(getWidth()/48),(float)(getHeight()/26),(float)(getWidth()/48), paint);
-        //canvas.drawCircle((float)(3*getWidth()/48),(float)(23*getHeight()/26),(float)(getWidth()/48), paint);
-        canvas.drawCircle(3*getWidth()/48, 9*getHeight()/26, getWidth()/48, paint);
-        canvas.drawCircle(3*getWidth()/48, 23*getHeight()/26, getWidth()/48, paint);
-        canvas.drawCircle(33*getWidth()/48,  23*getHeight()/26, getWidth()/48, paint);
-        canvas.drawCircle(39*getWidth()/48,  19*getHeight()/26, getWidth()/48, paint);
-        canvas.drawCircle(45*getWidth()/48, 19*getHeight()/26, getWidth()/48, paint);
-        paint.setColor(Color.BLUE);
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2f);
-        Path path = new Path();
-        path.moveTo(3*getWidth()/48, 9*getHeight()/26);
-        path.lineTo(3 * getWidth() / 48, 23 * getHeight() / 26);
-        path.lineTo(33*getWidth()/48,  23*getHeight()/26);
-        path.lineTo(39*getWidth()/48,  19*getHeight()/26);
-        path.lineTo(45*getWidth()/48, 19*getHeight()/26);
-        //path.close();
-        canvas.drawPath(path,paint);
-        paint.setColor(Color.parseColor("#CD5C5C"));
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(10*getWidth()/48, 23*getHeight()/26, getWidth()/48, paint);
-        paint.setColor(Color.BLUE);
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2f);
-        path.moveTo(10*getWidth()/48, 9*getHeight()/26);
-        path.lineTo(10*getWidth()/48, 16*getHeight()/26);
-        canvas.drawPath(path,paint);*/
-
-        // Les arêtes qui n'appartiennent pas au trajet sont peintes en noir
-        paint.setColor(Color.BLACK);
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2f);
-        Path blackPath = new Path();
-
-
+    // Marquage du boolean de trajet à true pour les noeuds et aretes du parcours
+    public void markPath(){
         for (int i :graph.getFinalPath()){
             graph.getNodes()[i].setGreen(true);
         }
@@ -152,318 +100,232 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
         }
+    }
 
+    // Affichage des arêtes hors parcours
+    public void colorEdgesNonPath (Path path, Paint paint, int color, Canvas canvas){
         for (Edge edge : graph.getEdges()){
             if (!edge.isGreen()){
-                blackPath.moveTo(graph.getNodes()[edge.getFromNodeIndex()].getX()*getWidth()/48,
+                path.moveTo(graph.getNodes()[edge.getFromNodeIndex()].getX()*getWidth()/48,
                         graph.getNodes()[edge.getFromNodeIndex()].getY()*getHeight()/26);
-                blackPath.lineTo(graph.getNodes()[edge.getToNodeIndex()].getX()*getWidth()/48,
+                path.lineTo(graph.getNodes()[edge.getToNodeIndex()].getX()*getWidth()/48,
                         graph.getNodes()[edge.getToNodeIndex()].getY()*getHeight()/26);
             }
         }
-        canvas.drawPath(blackPath,paint);
+        paint.setColor(color);
+        canvas.drawPath(path,paint);
+    }
 
-        paint.setColor(Color.WHITE);
-        Path greenPath = new Path();
-
+    // Affichage des arêtes du parcours
+    public void colorEdgesPath (Path path, Paint paint, int color, Canvas canvas){
         for (Edge edge : graph.getEdges()){
             if (edge.isGreen()){
-                greenPath.moveTo(graph.getNodes()[edge.getFromNodeIndex()].getX()*getWidth()/48,
+                path.moveTo(graph.getNodes()[edge.getFromNodeIndex()].getX()*getWidth()/48,
                         graph.getNodes()[edge.getFromNodeIndex()].getY()*getHeight()/26);
-                greenPath.lineTo(graph.getNodes()[edge.getToNodeIndex()].getX()*getWidth()/48,
+                path.lineTo(graph.getNodes()[edge.getToNodeIndex()].getX()*getWidth()/48,
                         graph.getNodes()[edge.getToNodeIndex()].getY()*getHeight()/26);
             }
         }
+        paint.setColor(color);
+        canvas.drawPath(path,paint);
+    }
 
-        canvas.drawPath(greenPath,paint);
+    public void updateBitmapMove(Canvas canvas) {
+        // Calcul des extrémités pour le parcours du bitmap de flèches ainsi que de la distance
+        // à effectuer en abcisse et en ordonnée
 
-        /*departX = graph.getNodes()[3].getX()*getWidth()/48;
-        departY = graph.getNodes()[3].getY()*getHeight()/26;
-        arriveeX = graph.getNodes()[1].getX()*getWidth()/48;
-        arriveeY= graph.getNodes()[1].getY()*getHeight()/26;
-        deltaX = arriveeX - departX;
-        deltaY= arriveeY - departY;
-
-
-        if (arrowOnStart) {
-            x = departX;
-            y = departY;
-            arrowOnStart = false;
-        }
-
-
-        if (x < arriveeX){
-            x=x+2;
-        }
-        else {
-            arrowOnStart=true;
-        }
-        if ( y < arriveeY){
-            y = y + 2*deltaY/deltaX;
-        }
-        else {
-            arrowOnStart=true;
-        }
-        canvas.drawBitmap(bmp,x,y,null);*/
-
-
-
-
-
-        for (int i=graph.getFinalPath().size()-1; i>0 ;i--){
-            departX= graph.getNodes()[graph.getFinalPath().get(i)].getX()*getWidth()/48;
-            arriveeX = graph.getNodes()[graph.getFinalPath().get(i-1)].getX()*getWidth()/48;
+        for (int i = graph.getFinalPath().size() - 1; i > 0; i--) {
+            departX = graph.getNodes()[graph.getFinalPath().get(i)].getX() * getWidth() / 48;
+            arriveeX = graph.getNodes()[graph.getFinalPath().get(i - 1)].getX() * getWidth() / 48;
             deltaX = arriveeX - departX;
-            departY = graph.getNodes()[graph.getFinalPath().get(i)].getY()*getHeight()/26;
-            arriveeY = graph.getNodes()[graph.getFinalPath().get(i-1)].getY()*getHeight()/26;
+            departY = graph.getNodes()[graph.getFinalPath().get(i)].getY() * getHeight() / 26;
+            arriveeY = graph.getNodes()[graph.getFinalPath().get(i - 1)].getY() * getHeight() / 26;
             deltaY = arriveeY - departY;
 
-
-            if (arrowsOnStart.get(i)){
+            // Initialisation aux extrémités de départ
+            if (arrowsOnStart.get(i)) {
                 xArrow.set(i, departX);
-                yArrow.set(i,departY);
-                arrowsOnStart.set(i,false);
+                yArrow.set(i, departY);
+                arrowsOnStart.set(i, false);
             }
 
-            if (arriveeX < departX){
-                if (xArrow.get(i) - bmp.getWidth()/2 < arriveeX){
-                    arrowsOnStart.set(i,true);
+            // Calcul des stops du bitmap et retour à l'extrémité de départ suivant les différents
+            // cas de figure... Si le trajet se fait de gauche à droite et/ou du haut vers le bas etc
+
+            // Trajet de droite à gauche
+            if (arriveeX < departX) {
+                if (xArrow.get(i) - bmp.getWidth() / 2 < arriveeX) {
+                    arrowsOnStart.set(i, true);
+                } else {
+                    xArrow.set(i, xArrow.get(i) - speed);
                 }
-                else{
-                    xArrow.set(i,xArrow.get(i)-speed);
-                }
-                if (arriveeY < departY){
-                    if (yArrow.get(i) - bmp.getHeight()/2 < arriveeY){
-                        arrowsOnStart.set(i,true);
-                    }
-                    else {
-                        yArrow.set(i,yArrow.get(i)-speed*deltaY/deltaX);
-                    }
-                }
-                else if (arriveeY > departY) {
-                    if (yArrow.get(i) + bmp.getHeight()/2 > arriveeY) {
-                        arrowsOnStart.set(i,true);
+                // Trajet du bas vers le haut
+                if (arriveeY < departY) {
+                    if (yArrow.get(i) - bmp.getHeight() / 2 < arriveeY) {
+                        arrowsOnStart.set(i, true);
                     } else {
-                        yArrow.set(i,yArrow.get(i)-speed*deltaY/deltaX);
+                        yArrow.set(i, yArrow.get(i) - speed * deltaY / deltaX);
                     }
                 }
-            }
-            else if (arriveeX > departX){
-                if (xArrow.get(i) + bmp.getWidth()/2 > arriveeX){
-                    arrowsOnStart.set(i,true);
-                }
-                else{
-                    xArrow.set(i,xArrow.get(i)+speed);
-                }
-                if (arriveeY < departY){
-                    if (yArrow.get(i) - bmp.getHeight()/2 < arriveeY){
-                        arrowsOnStart.set(i,true);
-                    }
-                    else {
-                        yArrow.set(i,yArrow.get(i)+speed*deltaY/deltaX);
-                    }
-                }
+                // Trajet du haut vers le bas
                 else if (arriveeY > departY) {
-                    if (yArrow.get(i)+bmp.getHeight()/2 > arriveeY) {
-                        arrowsOnStart.set(i,true);
+                    if (yArrow.get(i) + bmp.getHeight() / 2 > arriveeY) {
+                        arrowsOnStart.set(i, true);
                     } else {
-                        yArrow.set(i,yArrow.get(i)+speed*deltaY/deltaX);
+                        yArrow.set(i, yArrow.get(i) - speed * deltaY / deltaX);
                     }
                 }
             }
-            else if (arriveeX == departX){
-                if (arriveeY < departY){
-                    if (yArrow.get(i) - bmp.getWidth()/2 < arriveeY){
-                        arrowsOnStart.set(i,true);
+            // Trajet de gauche à droite
+            else if (arriveeX > departX) {
+                if (xArrow.get(i) + bmp.getWidth() / 2 > arriveeX) {
+                    arrowsOnStart.set(i, true);
+                } else {
+                    xArrow.set(i, xArrow.get(i) + speed);
+                }
+                if (arriveeY < departY) {
+                    if (yArrow.get(i) - bmp.getHeight() / 2 < arriveeY) {
+                        arrowsOnStart.set(i, true);
+                    } else {
+                        yArrow.set(i, yArrow.get(i) + speed * deltaY / deltaX);
                     }
-                    else {
-                        yArrow.set(i,yArrow.get(i)-speed);
+                } else if (arriveeY > departY) {
+                    if (yArrow.get(i) + bmp.getHeight() / 2 > arriveeY) {
+                        arrowsOnStart.set(i, true);
+                    } else {
+                        yArrow.set(i, yArrow.get(i) + speed * deltaY / deltaX);
                     }
                 }
-                else if (arriveeY > departY){
-                    if (yArrow.get(i) + bmp.getWidth()/2 > arriveeY){
-                        arrowsOnStart.set(i,true);
+            }
+            // Trajet uniquement vertical
+            else if (arriveeX == departX) {
+                if (arriveeY < departY) {
+                    if (yArrow.get(i) - bmp.getWidth() / 2 < arriveeY) {
+                        arrowsOnStart.set(i, true);
+                    } else {
+                        yArrow.set(i, yArrow.get(i) - speed);
                     }
-                    else {
-                        yArrow.set(i,yArrow.get(i)+speed);
+                } else if (arriveeY > departY) {
+                    if (yArrow.get(i) + bmp.getWidth() / 2 > arriveeY) {
+                        arrowsOnStart.set(i, true);
+                    } else {
+                        yArrow.set(i, yArrow.get(i) + speed);
                     }
                 }
             }
 
-            float h = (float) Math.sqrt(deltaX*deltaX+deltaY*deltaY);
 
-            /*Matrix matrix = new Matrix();
-            matrix.setSinCos(deltaY/h,deltaX/h,xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2);
-            canvas.drawBitmap(bmp, matrix, null);*/
-
-
-
-            /*Matrix matrix2 = new Matrix();
-            matrix2.setRotate((float) Math.toDegrees(Math.atan(deltaY/deltaX)),
-                    xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2);
-            canvas.drawBitmap(bmp, matrix2, null);*/
-
-
-            double angle = Math.atan(deltaY/deltaX);
-            if (deltaX<0){
+            // Rotation du bitmap des flèches suivant l'orientation du parcours
+            // à l'aide de l'arctan du rapport des deltas
+            double angle = Math.atan(deltaY / deltaX);
+            if (deltaX < 0) {
                 angle = angle + Math.PI;
             }
-
             canvas.save();
             canvas.rotate((float) Math.toDegrees(angle),
-                    xArrow.get(i),yArrow.get(i));
-            canvas.drawBitmap(bmp,xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2,null);
+                    xArrow.get(i), yArrow.get(i));
+            canvas.drawBitmap(bmp, xArrow.get(i) - bmp.getWidth() / 2, yArrow.get(i) - bmp.getHeight() / 2, null);
             canvas.restore();
 
-            //canvas.drawBitmap(bmp,xArrow.get(i)-bmp.getWidth()/2,yArrow.get(i)-bmp.getHeight()/2,null);
+
         }
+    }
 
 
-
-
-        /*
-        for (int i=graph.getFinalPath().size()-1; i>0 ;i--){
-            departX= graph.getNodes()[graph.getFinalPath().get(i)].getX();
-            arriveeX = graph.getNodes()[graph.getFinalPath().get(i-1)].getX();
-            deltaX = arriveeX - departX;
-            departY = graph.getNodes()[graph.getFinalPath().get(i)].getY();
-            arriveeY = graph.getNodes()[graph.getFinalPath().get(i-1)].getY();
-            deltaY = arriveeY - departY;
-            x = departX;
-            y = departY;
-            //float speedX = (float) 0.1;
-            //float speedY = (float) 0.1;
-            if (arriveeX < departX){
-                // speedX = - speedX;
-                if (x < arriveeX){
-                       x = departX;
-                   }
-                   else{
-                       x--;
-                   }
-                if (arriveeY < departY){
-                    if (y < arriveeY){
-                        y = departY;
-                    }
-                    else {
-                        y=y-deltaY/deltaX;
-                    }
-                }
-                else if (arriveeY > departY) {
-                    if (y > arriveeY) {
-                        y = departY;
-                    } else {
-                        y =y-deltaY/deltaX;
-                    }
-                }
-                else if (arriveeY == departY){
-                    x--;
-                }
-            }
-            else if (arriveeX > departX){
-                if (x > arriveeX){
-                    x = departX;
-                }
-                else{
-                    x++;
-                }
-                if (arriveeY < departY){
-                    if (y < arriveeY){
-                        y = departY;
-                    }
-                    else {
-                        y = y+deltaY/deltaX;
-                    }
-                }
-                else if (arriveeY > departY) {
-                    if (y > arriveeY) {
-                        y = departY;
-                    } else {
-                        y =y+deltaY/deltaX;
-                    }
-                }
-                else if (arriveeY == departY){
-                    x++;
-                }
-            }
-            else if (arriveeX == departX){
-                if (arriveeY < departY){
-                    if (y < arriveeY){
-                        y = departY;
-                    }
-                    else {
-                        y--;
-                    }
-                }
-                else if (arriveeY > departY){
-                    if (y > arriveeY){
-                        y = departY;
-                    }
-                    else {
-                        y++;
-                    }
-                }
-            }
-        canvas.drawBitmap(bmp,x,y,null);
-        }*/
-
-        /*if (x == getWidth() - bmp.getWidth()) {
-            xSpeed = -1;
-        }
-        if (x == 0) {
-            xSpeed = 1;
-        }
-        x = x + xSpeed;
-        canvas.drawBitmap(bmp, x , 10, null);*/
-
-
-        // Les noeuds de départ et d'arrivée sont peint en bleu
+    public void colorNodesPath(Paint paint, Canvas canvas){
+        // Les noeuds de départ et d'arrivée sont peints en bleu
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.BLUE);
         canvas.drawCircle(getWidth()*graph.getNodes()[startIndex].getX()/48,
-                getHeight()*graph.getNodes()[startIndex].getY()/26, getWidth()/48, paint);
+                getHeight()*graph.getNodes()[startIndex].getY()/26, getWidth()/36, paint);
         canvas.drawCircle(getWidth()*graph.getNodes()[stopIndex].getX()/48,
-                getHeight()*graph.getNodes()[stopIndex].getY()/26, getWidth()/48, paint);
-        graph.getNodes()[startIndex].setBlue(true);
-        graph.getNodes()[stopIndex].setBlue(true);
+                getHeight()*graph.getNodes()[stopIndex].getY()/26, getWidth()/36, paint);
+        //graph.getNodes()[startIndex].setBlue(true);
+        //graph.getNodes()[stopIndex].setBlue(true);
 
         // Les noeuds de trajet intermédiaires sont peints en blanc
         paint.setColor(Color.WHITE);
         for (int i :graph.getFinalPath()){
-            if (!graph.getNodes()[i].isBlue()){
+            if (graph.getNodes()[i].isGreen()){
                 canvas.drawCircle(getWidth()*graph.getNodes()[i].getX()/48,
                         getHeight()*graph.getNodes()[i].getY()/26, getWidth()/48, paint);
                 graph.getNodes()[i].setGreen(true);
             }
         }
+    }
 
-        // Si les noeuds n'appartiennent pas au trajet final, ils sont peints en noir
-        //paint.setColor(Color.parseColor("#CD5C5C"));
-        paint.setColor(Color.BLACK);
+    // Si les noeuds n'appartiennent pas au trajet final, ils sont peints en argument color
+    public void colorNodesNonPath(Paint paint, int color, Canvas canvas){
+        paint.setColor(color);
         for (Node node :graph.getNodes()){
-            if (!node.isBlue() && !node.isGreen()){
+            //if (!node.isBlue() && !node.isGreen()){
+            if (!node.isGreen()){
                 canvas.drawCircle(getWidth()*node.getX()/48,
                         getHeight()*node.getY()/26,getWidth()/48, paint);
             }
         }
+    }
 
-        // Affichage des numéros des différents accès
-        paint.setColor(Color.GRAY);
+    // Affichage en noir des numéros des accès du trajet
+    public void writeNumbersPath(Paint paint, Canvas canvas){
+        paint.setColor(Color.BLACK);
         paint.setTextSize(20);
         for (Node node :graph.getNodes()){
-            canvas.drawText(node.getRoomName(), getWidth() * node.getX() / 48,
-                    getHeight() * node.getY() / 26, paint);
+            if (node.isGreen()){
+                canvas.drawText(node.getRoomName(), getWidth() * node.getX() / 48,
+                        getHeight() * node.getY() / 26, paint);
+            }
+        }
+    }
+
+    // Affichage des numéros des accès hors tajet
+    public void writeNumbersNonPath(Paint paint, Canvas canvas, int color){
+        paint.setColor(color);
+        paint.setTextSize(20);
+        for (Node node :graph.getNodes()){
+            if (!node.isGreen()){
+                canvas.drawText(node.getRoomName(), getWidth() * node.getX() / 48,
+                        getHeight() * node.getY() / 26, paint);
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+
+        paint.setColor(Color.parseColor("#ff3a3a3a"));
+        canvas.drawPaint(paint);
+
+        // Les arêtes qui n'appartiennent pas au trajet sont peintes en noir
+        paint.setColor(Color.BLACK);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2f);
+        Path blackPath = new Path();
+        if (isPlanDynamic){
+            markPath();
+            colorEdgesNonPath(blackPath, paint, Color.BLACK, canvas);
+            Path whitePath = new Path();
+            colorEdgesPath(whitePath,paint,Color.WHITE,canvas);
+            updateBitmapMove(canvas);
+            paint.setStyle(Paint.Style.FILL);
+            colorNodesPath(paint, canvas);
+            colorNodesNonPath(paint,Color.BLACK,canvas);
+            writeNumbersPath(paint,canvas);
+            writeNumbersNonPath(paint,canvas,Color.GRAY);
+        }
+        else {
+            colorEdgesNonPath(blackPath,paint,Color.WHITE,canvas);
+            paint.setStyle(Paint.Style.FILL);
+            colorNodesNonPath(paint, Color.WHITE, canvas);
+            writeNumbersNonPath(paint,canvas,Color.BLACK);
         }
 
-
-
-        //invalidate();
-        /*Rect ourRect = new Rect();
-        ourRect.set(0,0,canvas.getWidth(),canvas.getHeight()/2);
-        Paint blue = new Paint();
-        blue.setColor(Color.BLUE);
-        blue.setStyle(Paint.Style.FILL);
-        canvas.drawRect(ourRect,blue);*/
     }
 
 
