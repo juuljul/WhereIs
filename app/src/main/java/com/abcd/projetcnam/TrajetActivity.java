@@ -2,11 +2,15 @@ package com.abcd.projetcnam;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -14,7 +18,7 @@ import java.util.Locale;
 /**
  * Created by julien on 11/08/2015.
  */
-public class TrajetActivity extends Activity implements TextToSpeech.OnInitListener{
+public class TrajetActivity extends Activity {
     String startRoom, stopRoom;
 
     String cheminSpeech = "";
@@ -22,10 +26,17 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
 
     boolean isPlanDynamic = false;
 
-    private TextToSpeech textToSpeech;
-    private Locale currentSpokenLang = Locale.FRENCH;
+    /*private TextToSpeech textToSpeech;
+    private Locale currentSpokenLang = Locale.FRENCH;*/
 
     MySurfaceView mySurfaceView;
+
+    /*Button button1,button2;
+    Display display;
+    Point size;
+
+    int width = 0;
+    int height = 0;*/
 
 
 
@@ -40,8 +51,13 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
         }
         mySurfaceView = new MySurfaceView(this, startRoom,stopRoom,isPlanDynamic);
         setContentView(mySurfaceView);
+        /*setContentView(R.layout.activity_trajet);
+        mySurfaceView = (MySurfaceView) findViewById(R.id.mySurfaceView);
+        button1 = (Button) findViewById(R.id.button1);
+        button2 = (Button) findViewById(R.id.button2);*/
 
-        if (isPlanDynamic){
+
+       /* if (isPlanDynamic){
             textToSpeech = new TextToSpeech(this,this);
 
 
@@ -53,23 +69,52 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
                     "Vous devez successivement passer par les accès numéros" + chemin +
                     "le chemin total se fait à la marche en " + mySurfaceView.getLongueurTrajet() + "pas";
 
-        }
+        }*/
+
+        /*display = getWindowManager().getDefaultDisplay();
+        size = new Point();
+        display.getSize(size);
+
+        width=size.x;
+        height= size.y;
+
+        button = new Button(this);
+
+        button.setBackgroundResource(R.drawable.triang30vert);
+        //button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        button.setText("Button ");
+        button.setX(25 * width / 48);
+        button.setY(7*height/26);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1;
+                intent1 = new Intent(this,LocationActivity.class);
+                startActivity(intent1);
+            }
+        });
+
+        button1.setX(25 * width / 48);
+        button1.setY(7*height/26);
+        button2.setX(21 * width / 48);
+        button2.setY(15*height/26);*/
+
 
 
     }
 
     @Override
     protected void onDestroy() {
-        if (isPlanDynamic){
+        /*if (isPlanDynamic){
             if (textToSpeech != null) {
                 textToSpeech.stop();
                 textToSpeech.shutdown();
             }
-        }
+        }*/
         super.onDestroy();
     }
 
-    @Override
+    /*@Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if (isPlanDynamic){
@@ -77,7 +122,7 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
             textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
         }
         return super.onTouchEvent(event);
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,7 +147,7 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
     }
 
 
-    @Override
+    /*@Override
     public void onInit(int status) {
 
         if (status == TextToSpeech.SUCCESS) {
@@ -120,5 +165,10 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
         }
 
 
-    }
+    }*/
+
+    /*public void goToOther(View view) {
+        Intent intent = new Intent(this,LocationActivity.class);
+        startActivity(intent);
+    }*/
 }

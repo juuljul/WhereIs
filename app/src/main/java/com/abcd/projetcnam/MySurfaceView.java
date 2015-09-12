@@ -1,6 +1,7 @@
 package com.abcd.projetcnam;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,8 +11,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.speech.tts.TextToSpeech;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ import java.util.Locale;
 /**
  * Created by julien on 11/08/2015.
  */
-public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
+public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, TextToSpeech.OnInitListener{
 
     SurfaceHolder surfaceHolder;
     DrawingThread drawingThread;
@@ -43,13 +46,26 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     boolean isPlanDynamic = true;
 
+    GButton ttsButton, backButton;
+    Bitmap bitmapButton;
+    Context context;
+
+    String cheminSpeech = "";
+    String chemin="";
+    private TextToSpeech textToSpeech;
+    private Locale currentSpokenLang = Locale.FRENCH;
+
+
 
     public MySurfaceView(Context context, String startRoom, String stopRoom, boolean isPlanDynamic) {
         super(context);
+        this.context=context;
         this.startRoom = startRoom;
         this.stopRoom = stopRoom;
         this.isPlanDynamic = isPlanDynamic;
         graph = new Graph();
+
+        //setOnTouchListener(MySurfaceView.this);
 
         if (isPlanDynamic) {
             findRoomIndex();
@@ -61,12 +77,29 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 yArrow.add((float) 0);
             }
             bmp = BitmapFactory.decodeResource(getResources(),R.drawable.fleches10x30);
+
+            textToSpeech = new TextToSpeech(context,this);
+
+            for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
+                chemin = chemin +graph.getFinalPath().get(i)+", ";
+            }
+
+            cheminSpeech = "Pour atteindre l'accès numéro" + graph.getFinalPath().get(0) +
+                    "Vous devez successivement passer par les accès numéros" + chemin +
+                    "le chemin total se fait à la marche en " + longueurTrajet + "pas";
+
         }
+
+
+
 
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         drawingThread = new DrawingThread();
 
+        bitmapButton = BitmapFactory.decodeResource(getResources(),R.drawable.triang30vert);
+        ttsButton = new GButton(30,30,bitmapButton);
+        backButton = new GButton(30,30,bitmapButton);
 
     }
 
@@ -291,6 +324,35 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        synchronized (surfaceHolder){
+            float x = event.getX();
+            float y = event.getY();
+            //if (backButton.btn_rect.contains(x, y))
+            if (x>=40*getWidth()/48 && x<=30+40*getWidth()/48 && y>=7*getHeight()/26 && y<=30+7*getHeight()/26)
+            {
+                Intent intent = new Intent(context,DestinationActivity.class);
+                context.startActivity(intent);
+            }
+            //if (ttsButton.btn_rect.contains(x, y))
+            if (x>=25*getWidth()/48 && x<=30+25*getWidth()/48 && y>=7*getHeight()/26 && y<=30+7*getHeight()/26)
+            {
+                if (isPlanDynamic){
+                    textToSpeech.setLanguage(currentSpokenLang);
+                    textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
+                }
+            }
+            /*if (x>getWidth()/2 && y>getHeight()/2)
+            {
+                textToSpeech.setLanguage(currentSpokenLang);
+                textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
+            }*/
+        }
+        // handle on touch here
+        return true;
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -300,6 +362,11 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
         paint.setColor(Color.parseColor("#ff3a3a3a"));
         canvas.drawPaint(paint);
+
+        ttsButton.setPosition(25*getWidth()/48,7*getHeight()/26);
+        ttsButton.draw(canvas);
+        backButton.setPosition(40*getWidth()/48,7*getHeight()/26);
+        backButton.draw(canvas);
 
         // Les arêtes qui n'appartiennent pas au trajet sont peintes en noir
         paint.setColor(Color.BLACK);
@@ -345,6 +412,12 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        if (isPlanDynamic){
+            if (textToSpeech != null) {
+                textToSpeech.stop();
+                textToSpeech.shutdown();
+            }
+        }
         drawingThread.keepDrawing = false;
         boolean joined = false;
         while (!joined){
@@ -367,7 +440,48 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return longueurTrajet;
     }
 
+    @Override
+    public void onInit(int status) {
 
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = textToSpeech.setLanguage(currentSpokenLang);
+
+            // If language data or a specific language isn't available error
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(context, "Language Not Supported", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(context, "Text To Speech Failed", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /*@Override
+    public boolean onTouch(View v, MotionEvent event) {
+        //switch (event.getAction()){
+            //case MotionEvent.ACTION_DOWN:
+        synchronized (getHolder()){
+                float x = event.getX();
+                float y = event.getY();
+                if (backButton.btn_rect.contains(x, y))
+                {
+                    Intent intent = new Intent(context,DestinationActivity.class);
+                    context.startActivity(intent);
+                }
+                if (ttsButton.btn_rect.contains(x, y))
+                {
+                    if (isPlanDynamic){
+                        textToSpeech.setLanguage(currentSpokenLang);
+                        textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }
+        }
+            // handle on touch here
+        return true;
+    }*/
 
 
     private class DrawingThread extends Thread {
