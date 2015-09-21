@@ -64,10 +64,12 @@ public class MyBaseAdapter extends BaseAdapter {
         accessBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, TrajetActivity.class);
+                /*Intent intent = new Intent(context, TrajetActivity.class);
                 intent.putExtra("StartRoom","2");
                 intent.putExtra("StopRoom",temp.access);
-                intent.putExtra("DynamicPlan",true);
+                intent.putExtra("DynamicPlan",true);*/
+                Intent intent = new Intent(context, LocationActivity.class);
+                intent.putExtra("StopRoom",temp.access);
                 context.startActivity(intent);
             }
         });

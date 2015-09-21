@@ -77,6 +77,29 @@ public class Graph {
     }
 
 
+    public int findStartIndex(String startRoom) {
+        int startIndex = 0;
+        for (Node node : getNodes()) {
+            if (node.getRoomName().equals(startRoom)) {
+                startIndex = node.getIndex();
+                break;
+            }
+        }
+        return startIndex;
+    }
+
+    public int findStopIndex(String stopRoom) {
+        int stopIndex=0;
+        for (Node node :getNodes()) {
+            if (node.getRoomName().equals(stopRoom)) {
+                stopIndex = node.getIndex();
+                break;
+            }
+        }
+        return stopIndex;
+    }
+
+
     public Node[] getNodes() {
         return nodes;
     }

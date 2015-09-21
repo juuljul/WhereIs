@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="100">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="90"
+        >
     <com.abcd.projetcnam.MySurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/mySurfaceView"/>
-
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:weightSum="100"
+        android:orientation="horizontal">
         <Button
-            android:text="Button"
+            android:text="Choisir un autre trajet"
             android:id="@+id/button1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/triang30vert"
-            android:onClick="goToOther"></Button>
+            android:layout_weight="50"
+            android:background="@drawable/btn_degrade_blanc"
+            android:onClick="goToLocation"></Button>
         <Button
-            android:text="Button"
+            android:text="Ecouter le détail du trajet"
             android:id="@+id/button2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/triang30vert"></Button>
+            android:layout_weight="50"
+            android:background="@drawable/btn_degrade_blanc"
+            android:onClick="activateSound"></Button>
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>

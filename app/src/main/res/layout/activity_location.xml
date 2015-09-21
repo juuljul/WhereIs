@@ -1,89 +1,110 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.abcd.projetcnam.LocationActivity">
+    tools:context="com.abcd.projetcnam.LocationActivity">-->
 
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/relativeDestination"
+        android:background="#ff029afb"
+        android:layout_weight="45"
+        >
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/textDestination"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vous n'êtes pas encore au Cnam ? Le bâtiment se situe au
-         292 rue Saint Martin, 75003 Paris"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/textDestination"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Localiser l'adresse avec Google Maps"
-        android:onClick="goToMap"
-        android:id="@+id/button5"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vous êtes déjà au Cnam ! Devant quel accès vous situez-vous?
-        (Si vous êtes à l'entrée du bâtiment, choisissez le 1"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/button5"
+        android:text="Quel accès recherchez-vous?"
+        android:id="@+id/textDestination"
+        android:textAppearance="?android:textAppearanceLarge"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="47dp" />
+        android:layout_marginTop="15dp" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/spinnerDestination"
+        android:layout_below="@id/textDestination"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calculer le trajet le plus court"
-        android:id="@+id/button6"
-        android:onClick="goToTrajet"
-        android:layout_below="@+id/spinner"
+        android:text="Consulter votre emploi du temps"
+        android:id="@+id/buttonSchedule"
+        android:layout_below="@+id/spinnerDestination"
+        android:onClick="goToSchedule"
         android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/relativeLocation"
+        android:layout_below="@id/relativeDestination"
+        android:background="#ff9dff7d"
+        android:layout_weight="45">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vous êtes devant un QR code ! Scannez le pour calculer votre trajet"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/button6"
-        android:layout_centerHorizontal="true" />
+        android:text="Devant quel accès vous situez-vous ? (Entrée = 1)"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:id="@+id/textLocation"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="37dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerLocation"
+        android:layout_below="@id/textLocation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Scan Bar"
-        android:id="@+id/button7"
-        android:layout_below="@+id/textView4"
-        android:onClick="scanBar"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan QR"
-        android:id="@+id/button8"
-        android:layout_below="@+id/button7"
+        android:text="Scanner votre localisation"
+        android:id="@+id/buttonScan"
+        android:layout_below="@+id/spinnerLocation"
         android:onClick="scanQR"
+        android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/relativeBtn"
+        android:layout_below="@id/relativeLocation"
+        android:layout_weight="10">
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="Calculer le trajet le plus court"
+        android:id="@+id/buttonTrajet"
+        android:onClick="goToTrajet"
+        android:background="@drawable/btn_degrade_blanc"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    </RelativeLayout>
 
-</RelativeLayout>
+    </LinearLayout>

@@ -132,7 +132,7 @@ public class DbHelperAdapter {
         public DbHelper(Context context) {
             super(context, DATABASE_NAME, null,DATABASE_VERSION);
             this.context = context;
-            Message.message(context, "Constructor called");
+            //Message.message(context, "Constructor called");
         }
 
 
@@ -140,9 +140,9 @@ public class DbHelperAdapter {
         public void onCreate(SQLiteDatabase db) {
             try {
                 db.execSQL(CREATE_TABLE);
-                Message.message(context,"OnCreate called");
+                //Message.message(context,"OnCreate called");
             } catch (SQLException e) {
-                Message.message(context, ""+e);
+                //Message.message(context, ""+e);
             }
         }
 
@@ -150,10 +150,10 @@ public class DbHelperAdapter {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             try {
                 db.execSQL(DROP_TABLE);
-                Message.message(context,"OnUpgrade called");
+                //Message.message(context,"OnUpgrade called");
                 onCreate(db);
             } catch (SQLException e) {
-                Message.message(context, ""+e);
+               // Message.message(context, ""+e);
             }
         }
     }

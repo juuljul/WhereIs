@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class MyAlarm extends Activity
@@ -41,6 +42,8 @@ public class MyAlarm extends Activity
     static AlarmManager alarmManager;
     public static int i=0;
 
+    ToggleButton toggleAlarm;
+
     ArrayList <Calendar> calendarArrayList = new ArrayList<>();
     //ArrayList<PendingIntent> pendingIntentArrayList = new ArrayList<>();
 
@@ -59,7 +62,8 @@ public class MyAlarm extends Activity
         matiereText = (TextView) findViewById(R.id.matiereText);
         dateText = (TextView) findViewById(R.id.dateText);
         roomText = (TextView) findViewById(R.id.roomText);
-        button = (Button) findViewById(R.id.button);
+        //button = (Button) findViewById(R.id.button);
+        toggleAlarm = (ToggleButton) findViewById(R.id.toggleAlarm);
 
 
         // A remplacer éventuellement par un autocompleteTextView
@@ -141,7 +145,8 @@ public class MyAlarm extends Activity
     }
 
 
-    public void activateAlarm(View view) {
+   /* public void activateAlarm(View view) {
+
 
         i++;
         calendarArrayList.add(cal);
@@ -158,24 +163,39 @@ public class MyAlarm extends Activity
 
         alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent);
-
         //pendingIntentArrayList.add(pendingIntent);
 
-        /*for (int j=0;j<i;j++){
+       for (int j=0;j<i;j++){
             alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC, calendarArrayList.get(j).getTimeInMillis(), pendingIntentArrayList.get(j));
-        }*/
+        }
 
         //AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
 
 
-    }
+    }*/
 
     public void registerData(View view) {
         dbAdapter = new DbHelperAdapter(this);
         dbAdapter.insertData(editMatiere.getText().toString(),spinner.getSelectedItem().toString(),
                 editDate.getText().toString());
+
+        if (toggleAlarm.isChecked()){
+            i++;
+            calendarArrayList.add(cal);
+            Intent myIntent = new Intent(MyAlarm.this, AlarmReceiver.class);
+            myIntent.setData(Uri.parse("alarm:" + i));
+            pendingIntent = PendingIntent.getBroadcast(MyAlarm.this, i, myIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+            long timeAlarm = cal.getTimeInMillis()-2*3600*1000;
+            alarmManager.set(AlarmManager.RTC, timeAlarm, pendingIntent);
+        }
+
+        Toast.makeText(this, "L'évènement a été ajouté à l'emploi du temps",Toast.LENGTH_LONG).show();
+
+        /*Intent intent = new Intent(this, ScheduleActivity.class);
+        startActivity(intent);*/
 
     }
 
@@ -184,4 +204,6 @@ public class MyAlarm extends Activity
         startActivity(intent);
 
     }
+
+
 }

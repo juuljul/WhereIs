@@ -29,11 +29,6 @@ public class ScheduleActivity extends ActionBarActivity {
         listView = (ListView) findViewById(R.id.listView);
         myBaseAdapter = new MyBaseAdapter(this);
         listView.setAdapter(myBaseAdapter);
-
-
-
-
-
     }
 
 

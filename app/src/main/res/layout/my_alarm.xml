@@ -56,18 +56,28 @@
 
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Activer une notification 2 heures avant"
+        android:id="@+id/alarmText"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal" />
+
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="alarm 1"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/toggleAlarm" android:checked="false"
+        android:textOff="Non" android:textOn="Oui"/>
+
 
     <Button
         style="@style/bluebutton"
-        android:text="ACTIVER L'ALARME"
-        android:id="@+id/button"
-        android:onClick="activateAlarm"
-        android:layout_marginBottom="30dp"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        style="@style/bluebutton.petit"
-        android:text="ENREGISTRER DANS L'EMPLOI DU TEMPS"
+        android:text="AJOUTER DANS L'EMPLOI DU TEMPS"
         android:id="@+id/buttonRegister"
         android:layout_marginBottom="30dp"
         android:onClick="registerData"
@@ -75,7 +85,7 @@
 
     <Button
         style="@style/bluebutton.petit"
-        android:text="CONSULTER L'EMPLOI DU TEMPS"
+        android:text="RETOUR A L'EMPLOI DU TEMPS"
         android:id="@+id/buttonData"
         android:onClick="visitData"
         android:layout_gravity="center_horizontal" />

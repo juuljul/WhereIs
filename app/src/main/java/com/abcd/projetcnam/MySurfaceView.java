@@ -23,10 +23,23 @@ import java.util.Locale;
 /**
  * Created by julien on 11/08/2015.
  */
-public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, TextToSpeech.OnInitListener{
+public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback{
 
     SurfaceHolder surfaceHolder;
     DrawingThread drawingThread;
+
+    public void setStartRoom(String startRoom) {
+        this.startRoom = startRoom;
+    }
+
+    public void setStopRoom(String stopRoom) {
+        this.stopRoom = stopRoom;
+    }
+
+    public void setPlanDynamic(boolean isPlanDynamic) {
+        this.isPlanDynamic = isPlanDynamic;
+    }
+
     String startRoom, stopRoom;
 
     Graph graph;
@@ -46,8 +59,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     boolean isPlanDynamic = true;
 
-    GButton ttsButton, backButton;
-    Bitmap bitmapButton;
+    //GButton ttsButton, backButton;
+    //Bitmap bitmapButton;
     Context context;
 
     String cheminSpeech = "";
@@ -68,7 +81,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         //setOnTouchListener(MySurfaceView.this);
 
         if (isPlanDynamic) {
-            findRoomIndex();
+            //findRoomIndex();
+            startIndex = graph.findStartIndex(startRoom);
+            stopIndex = graph.findStopIndex(stopRoom);
             longueurTrajet = graph.findMinimumDistance(startIndex,stopIndex);
 
             for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
@@ -78,16 +93,16 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }
             bmp = BitmapFactory.decodeResource(getResources(),R.drawable.fleches10x30);
 
-            textToSpeech = new TextToSpeech(context,this);
+            /*textToSpeech = new TextToSpeech(context,this);
 
             for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
-                chemin = chemin +graph.getFinalPath().get(i)+", ";
+                chemin = chemin + graph.getNodes()[graph.getFinalPath().get(i)].getRoomName()
+                        +", ";
             }
 
             cheminSpeech = "Pour atteindre l'accès numéro" + graph.getFinalPath().get(0) +
                     "Vous devez successivement passer par les accès numéros" + chemin +
-                    "le chemin total se fait à la marche en " + longueurTrajet + "pas";
-
+                    "le chemin total se fait à la marche en " + longueurTrajet + "pas";*/
         }
 
 
@@ -97,14 +112,14 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         surfaceHolder.addCallback(this);
         drawingThread = new DrawingThread();
 
-        bitmapButton = BitmapFactory.decodeResource(getResources(),R.drawable.triang30vert);
-        ttsButton = new GButton(30,30,bitmapButton);
-        backButton = new GButton(30,30,bitmapButton);
+        //bitmapButton = BitmapFactory.decodeResource(getResources(),R.drawable.triang30vert);
+        /*ttsButton = new GButton(30,30,bitmapButton);
+        backButton = new GButton(30,30,bitmapButton);*/
 
     }
 
 
-    public void findRoomIndex(){
+    /*public void findRoomIndex(){
         for (Node node :graph.getNodes()){
             if(node.getRoomName().equals(startRoom)){
                 startIndex = node.getIndex();
@@ -117,7 +132,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 break;
             }
         }
-    }
+    }*/
 
     // Marquage du boolean de trajet à true pour les noeuds et aretes du parcours
     public void markPath(){
@@ -324,7 +339,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
-    @Override
+    /*@Override
     public boolean onTouchEvent(MotionEvent event) {
 
         synchronized (surfaceHolder){
@@ -333,7 +348,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             //if (backButton.btn_rect.contains(x, y))
             if (x>=40*getWidth()/48 && x<=30+40*getWidth()/48 && y>=7*getHeight()/26 && y<=30+7*getHeight()/26)
             {
-                Intent intent = new Intent(context,DestinationActivity.class);
+                Intent intent = new Intent(context,LocationActivity.class);
                 context.startActivity(intent);
             }
             //if (ttsButton.btn_rect.contains(x, y))
@@ -344,15 +359,15 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                     textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
-            /*if (x>getWidth()/2 && y>getHeight()/2)
+            if (x>getWidth()/2 && y>getHeight()/2)
             {
                 textToSpeech.setLanguage(currentSpokenLang);
                 textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
-            }*/
+            }
         }
         // handle on touch here
         return true;
-    }
+    }*/
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -360,13 +375,16 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
 
-        paint.setColor(Color.parseColor("#ff3a3a3a"));
+        //paint.setColor(Color.parseColor("#ff3a3a3a"));
+        paint.setColor(Color.parseColor("#C0F4FF"));
         canvas.drawPaint(paint);
 
-        ttsButton.setPosition(25*getWidth()/48,7*getHeight()/26);
+        /*ttsButton.setPosition(25*getWidth()/48,7*getHeight()/26);
         ttsButton.draw(canvas);
         backButton.setPosition(40*getWidth()/48,7*getHeight()/26);
-        backButton.draw(canvas);
+        backButton.draw(canvas);*/
+        //canvas.drawBitmap(bitmapButton,25*getWidth()/48,7*getHeight()/26,paint);
+        //canvas.drawBitmap(bitmapButton,40*getWidth()/48,7*getHeight()/26,paint);
 
         // Les arêtes qui n'appartiennent pas au trajet sont peintes en noir
         paint.setColor(Color.BLACK);
@@ -384,7 +402,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             colorNodesPath(paint, canvas);
             colorNodesNonPath(paint,Color.BLACK,canvas);
             writeNumbersPath(paint,canvas);
-            writeNumbersNonPath(paint,canvas,Color.GRAY);
+            writeNumbersNonPath(paint,canvas,Color.WHITE);
         }
         else {
             colorEdgesNonPath(blackPath,paint,Color.WHITE,canvas);
@@ -412,12 +430,12 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        if (isPlanDynamic){
+        /*if (isPlanDynamic){
             if (textToSpeech != null) {
                 textToSpeech.stop();
                 textToSpeech.shutdown();
             }
-        }
+        }*/
         drawingThread.keepDrawing = false;
         boolean joined = false;
         while (!joined){
@@ -440,7 +458,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return longueurTrajet;
     }
 
-    @Override
+    /*@Override
     public void onInit(int status) {
 
         if (status == TextToSpeech.SUCCESS) {
@@ -457,7 +475,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             Toast.makeText(context, "Text To Speech Failed", Toast.LENGTH_SHORT).show();
         }
 
-    }
+    }*/
 
     /*@Override
     public boolean onTouch(View v, MotionEvent event) {

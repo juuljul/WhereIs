@@ -1,6 +1,7 @@
 package com.abcd.projetcnam;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -15,46 +16,22 @@ import android.widget.Toast;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity implements TextToSpeech.OnInitListener {
+public class MainActivity extends ActionBarActivity {
 
-    EditText editStartRoom, editFinishRoom;
-    TextView textStartRoom, textFinishRoom;
-    Button button;
-    String startRoom, stopRoom= "";
 
-    /*Graph graph;
-    int startIndex = 0;
-    int stopIndex =0;
-    String st = "";*/
-
-    private TextToSpeech textToSpeech;
-    private Locale currentSpokenLang = Locale.FRENCH;
-
+    /*TextView textSalle, textMaps;
+    Button buttonSalle, buttonMaps;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editFinishRoom = (EditText) findViewById(R.id.editFinishRoom);
-        editStartRoom = (EditText) findViewById(R.id.editStartRoom);
-        textFinishRoom = (TextView) findViewById(R.id.textFinishRoom);
-        textStartRoom = (TextView) findViewById(R.id.textStartRoom);
-        button = (Button) findViewById(R.id.button);
-
-        textToSpeech = new TextToSpeech(this, this);
-        //graph = new Graph();
-
+        /*textSalle = (TextView) findViewById(R.id.textSalle);
+        textMaps = (TextView) findViewById(R.id.textMaps);
+        buttonSalle = (Button) findViewById(R.id.buttonSalle);*/
     }
 
-    @Override
-    protected void onDestroy() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-            textToSpeech.shutdown();
-        }
-        super.onDestroy();
-    }
 
 
     @Override
@@ -79,94 +56,16 @@ public class MainActivity extends ActionBarActivity implements TextToSpeech.OnIn
         return super.onOptionsItemSelected(item);
     }
 
-    public void validateRooms(View view) {
-        startRoom = editStartRoom.getText().toString();
-        stopRoom = editFinishRoom.getText().toString();
-
-        /*
-        for (Node node :graph.getNodes()){
-            if(node.getRoomName().equals(startRoom)){
-                startIndex = node.getIndex();
-                break;
-            }
-        }
-        for (Node node :graph.getNodes()) {
-            if (node.getRoomName().equals(stopRoom)) {
-                stopIndex = node.getIndex();
-                break;
-            }
-        }
-
-        graph.findMinimumDistance(startIndex,stopIndex);
-        for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
-            st = st + " >> " + graph.getFinalPath().get(i);
-        }
-        Toast.makeText(this, st, Toast.LENGTH_LONG).show();
-        st = "";*/
-
-
-        Intent intent = new Intent(this, TrajetActivity.class);
-        intent.putExtra("StartRoom",startRoom);
-        intent.putExtra("StopRoom",stopRoom);
-        intent.putExtra("DynamicPlan",true);
-        startActivity(intent);
-
-    }
-
-    public void goToAlarm(View view) {
-        Intent intent = new Intent(this, DestinationActivity.class);
+    public void findSalle(View view) {
+        Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
 
-    public void goToAlarmCreator(View view) {
-        Intent intent = new Intent(this, MyAlarm.class);
-        startActivity(intent);
-    }
-
-    public void speakText(View view) {
-
-        // Set the voice to use
-        textToSpeech.setLanguage(currentSpokenLang);
-
-        // Check that translations are in the array
-        /*if (arrayOfTranslations.length >= 9){
-
-            // There aren't voices for our first 3 languages so skip them
-            // QUEUE_FLUSH deletes previous text to read and replaces it
-            // with new text
-            textToSpeech.speak(arrayOfTranslations[spinnerIndex+4], TextToSpeech.QUEUE_FLUSH, null);
-
-        } else {
-
-            Toast.makeText(this, "Translate Text First", Toast.LENGTH_SHORT).show();
-
-        }*/
-        textToSpeech.speak(editStartRoom.getText().toString(),TextToSpeech.QUEUE_FLUSH, null);
-
-
-
-    }
-
-    @Override
-    public void onInit(int status) {
-        // Check if TextToSpeech is available
-        if (status == TextToSpeech.SUCCESS) {
-
-            int result = textToSpeech.setLanguage(currentSpokenLang);
-
-            // If language data or a specific language isn't available error
-            if (result == TextToSpeech.LANG_MISSING_DATA
-                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(this, "Language Not Supported", Toast.LENGTH_SHORT).show();
-            }
-
-        } else {
-            Toast.makeText(this, "Text To Speech Failed", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void gotoStaticPLan(View view) {
-        Intent intent = new Intent(this, TrajetActivity.class);
-        startActivity(intent);
+    public void goToMap(View view) {
+        Intent intent=null, chooser=null;
+        intent = new Intent(android.content.Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("geo:48.8669921,2.3545226"));
+        chooser= Intent.createChooser(intent, "Launch Maps");
+        startActivity(chooser);
     }
 }
