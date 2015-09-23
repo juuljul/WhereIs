@@ -6,15 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 public class ScheduleActivity extends ActionBarActivity {
 
-    //DbHelperAdapter dbAdapter;
-    //TextView scheduleText;
     ListView listView;
     MyBaseAdapter myBaseAdapter;
 
@@ -22,9 +18,6 @@ public class ScheduleActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        //dbAdapter = new DbHelperAdapter(this);
-        //scheduleText = (TextView) findViewById(R.id.scheduleText);
-        //scheduleText.setText(dbAdapter.getAllData());
 
         listView = (ListView) findViewById(R.id.listView);
         myBaseAdapter = new MyBaseAdapter(this);

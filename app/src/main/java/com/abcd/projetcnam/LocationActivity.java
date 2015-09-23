@@ -12,52 +12,40 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class LocationActivity extends ActionBarActivity {
 
-    //TextView textDestination;
     String roomDestination;
     int indexDestination;
     Spinner spinnerDestination, spinnerLocation;
-    ArrayAdapter arrayAdapter, arrayLargerAdapter;
+    ArrayAdapter arrayAdapter;
     Graph graph;
-
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
-        //textDestination = (TextView) findViewById(R.id.textDestination);
-
         spinnerDestination = (Spinner) findViewById(R.id.spinnerDestination);
         spinnerLocation = (Spinner) findViewById(R.id.spinnerLocation);
-        arrayLargerAdapter= ArrayAdapter.createFromResource(this,R.array.salles, R.layout.spinner_layout);
-        //arrayAdapter = ArrayAdapter.createFromResource(this,R.array.salles, R.layout.support_simple_spinner_dropdown_item);
         arrayAdapter= ArrayAdapter.createFromResource(this,R.array.salles, R.layout.spinner_layout);
-        spinnerDestination.setAdapter(arrayLargerAdapter);
+        spinnerDestination.setAdapter(arrayAdapter);
         spinnerLocation.setAdapter(arrayAdapter);
 
         graph = new Graph();
-
         Intent intent = getIntent();
         roomDestination = intent.getStringExtra("StopRoom");
 
         if (roomDestination!=null){
             String destinationText = "Vous souhaitez rejoindre l'accès " + roomDestination+ " du Cnam";
             Toast.makeText(this,destinationText,Toast.LENGTH_LONG).show();
-            indexDestination = graph.findStopIndex(roomDestination)-1;
+            indexDestination = graph.findIndex(roomDestination)-1;
             spinnerDestination.setSelection(indexDestination);
         }
-
-        //textDestination.setText("Vous souhaitez rejoindre l'accès " + roomDestination+ " du Cnam");
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,18 +68,6 @@ public class LocationActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    /*
-    public void scanBar(View v) {
-        try {
-            Intent intent = new Intent(ACTION_SCAN);
-            intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
-            startActivityForResult(intent, 0);
-        } catch (ActivityNotFoundException e) {
-            showDialog(LocationActivity.this, "No Scanner Found",
-                    "Download a scanner code activity?", "Yes", "No").show();
-        }
-    }*/
 
     public void scanQR(View v) {
         try {
@@ -161,13 +137,10 @@ public class LocationActivity extends ActionBarActivity {
         intent.putExtra("StopRoom",spinnerDestination.getSelectedItem().toString());
         intent.putExtra("DynamicPlan",true);
         startActivity(intent);
-
     }
 
     public void goToSchedule(View view) {
         Intent intent = new Intent(this,ScheduleActivity.class);
         startActivity(intent);
     }
-
-
 }

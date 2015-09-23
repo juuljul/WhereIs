@@ -1,24 +1,17 @@
 package com.abcd.projetcnam;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Rect;
-import android.speech.tts.TextToSpeech;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Locale;
+
 
 /**
  * Created by julien on 11/08/2015.
@@ -27,18 +20,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     SurfaceHolder surfaceHolder;
     DrawingThread drawingThread;
-
-    public void setStartRoom(String startRoom) {
-        this.startRoom = startRoom;
-    }
-
-    public void setStopRoom(String stopRoom) {
-        this.stopRoom = stopRoom;
-    }
-
-    public void setPlanDynamic(boolean isPlanDynamic) {
-        this.isPlanDynamic = isPlanDynamic;
-    }
 
     String startRoom, stopRoom;
 
@@ -56,18 +37,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     float speed = 10;
     double longueurTrajet =0;
-
     boolean isPlanDynamic = true;
-
-    //GButton ttsButton, backButton;
-    //Bitmap bitmapButton;
     Context context;
-
-    String cheminSpeech = "";
-    String chemin="";
-    private TextToSpeech textToSpeech;
-    private Locale currentSpokenLang = Locale.FRENCH;
-
 
 
     public MySurfaceView(Context context, String startRoom, String stopRoom, boolean isPlanDynamic) {
@@ -78,12 +49,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         this.isPlanDynamic = isPlanDynamic;
         graph = new Graph();
 
-        //setOnTouchListener(MySurfaceView.this);
-
         if (isPlanDynamic) {
-            //findRoomIndex();
-            startIndex = graph.findStartIndex(startRoom);
-            stopIndex = graph.findStopIndex(stopRoom);
+            startIndex = graph.findIndex(startRoom);
+            stopIndex = graph.findIndex(stopRoom);
             longueurTrajet = graph.findMinimumDistance(startIndex,stopIndex);
 
             for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
@@ -92,47 +60,12 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 yArrow.add((float) 0);
             }
             bmp = BitmapFactory.decodeResource(getResources(),R.drawable.fleches10x30);
-
-            /*textToSpeech = new TextToSpeech(context,this);
-
-            for (int i=graph.getFinalPath().size()-1; i>=0 ;i--){
-                chemin = chemin + graph.getNodes()[graph.getFinalPath().get(i)].getRoomName()
-                        +", ";
-            }
-
-            cheminSpeech = "Pour atteindre l'accès numéro" + graph.getFinalPath().get(0) +
-                    "Vous devez successivement passer par les accès numéros" + chemin +
-                    "le chemin total se fait à la marche en " + longueurTrajet + "pas";*/
         }
-
-
-
 
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         drawingThread = new DrawingThread();
-
-        //bitmapButton = BitmapFactory.decodeResource(getResources(),R.drawable.triang30vert);
-        /*ttsButton = new GButton(30,30,bitmapButton);
-        backButton = new GButton(30,30,bitmapButton);*/
-
     }
-
-
-    /*public void findRoomIndex(){
-        for (Node node :graph.getNodes()){
-            if(node.getRoomName().equals(startRoom)){
-                startIndex = node.getIndex();
-                break;
-            }
-        }
-        for (Node node :graph.getNodes()) {
-            if (node.getRoomName().equals(stopRoom)) {
-                stopIndex = node.getIndex();
-                break;
-            }
-        }
-    }*/
 
     // Marquage du boolean de trajet à true pour les noeuds et aretes du parcours
     public void markPath(){
@@ -262,7 +195,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
 
-
             // Rotation du bitmap des flèches suivant l'orientation du parcours
             // à l'aide de l'arctan du rapport des deltas
             double angle = Math.atan(deltaY / deltaX);
@@ -274,11 +206,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                     xArrow.get(i), yArrow.get(i));
             canvas.drawBitmap(bmp, xArrow.get(i) - bmp.getWidth() / 2, yArrow.get(i) - bmp.getHeight() / 2, null);
             canvas.restore();
-
-
         }
     }
-
 
     public void colorNodesPath(Paint paint, Canvas canvas){
         // Les noeuds de départ et d'arrivée sont peints en bleu
@@ -288,8 +217,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 getHeight()*graph.getNodes()[startIndex].getY()/26, getWidth()/36, paint);
         canvas.drawCircle(getWidth()*graph.getNodes()[stopIndex].getX()/48,
                 getHeight()*graph.getNodes()[stopIndex].getY()/26, getWidth()/36, paint);
-        //graph.getNodes()[startIndex].setBlue(true);
-        //graph.getNodes()[stopIndex].setBlue(true);
 
         // Les noeuds de trajet intermédiaires sont peints en blanc
         paint.setColor(Color.WHITE);
@@ -306,7 +233,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public void colorNodesNonPath(Paint paint, int color, Canvas canvas){
         paint.setColor(color);
         for (Node node :graph.getNodes()){
-            //if (!node.isBlue() && !node.isGreen()){
             if (!node.isGreen()){
                 canvas.drawCircle(getWidth()*node.getX()/48,
                         getHeight()*node.getY()/26,getWidth()/48, paint);
@@ -338,55 +264,13 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-
-    /*@Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        synchronized (surfaceHolder){
-            float x = event.getX();
-            float y = event.getY();
-            //if (backButton.btn_rect.contains(x, y))
-            if (x>=40*getWidth()/48 && x<=30+40*getWidth()/48 && y>=7*getHeight()/26 && y<=30+7*getHeight()/26)
-            {
-                Intent intent = new Intent(context,LocationActivity.class);
-                context.startActivity(intent);
-            }
-            //if (ttsButton.btn_rect.contains(x, y))
-            if (x>=25*getWidth()/48 && x<=30+25*getWidth()/48 && y>=7*getHeight()/26 && y<=30+7*getHeight()/26)
-            {
-                if (isPlanDynamic){
-                    textToSpeech.setLanguage(currentSpokenLang);
-                    textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-            if (x>getWidth()/2 && y>getHeight()/2)
-            {
-                textToSpeech.setLanguage(currentSpokenLang);
-                textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }
-        // handle on touch here
-        return true;
-    }*/
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
-
-        //paint.setColor(Color.parseColor("#ff3a3a3a"));
         paint.setColor(Color.parseColor("#C0F4FF"));
         canvas.drawPaint(paint);
-
-        /*ttsButton.setPosition(25*getWidth()/48,7*getHeight()/26);
-        ttsButton.draw(canvas);
-        backButton.setPosition(40*getWidth()/48,7*getHeight()/26);
-        backButton.draw(canvas);*/
-        //canvas.drawBitmap(bitmapButton,25*getWidth()/48,7*getHeight()/26,paint);
-        //canvas.drawBitmap(bitmapButton,40*getWidth()/48,7*getHeight()/26,paint);
-
-        // Les arêtes qui n'appartiennent pas au trajet sont peintes en noir
         paint.setColor(Color.BLACK);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
@@ -410,12 +294,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             colorNodesNonPath(paint, Color.WHITE, canvas);
             writeNumbersNonPath(paint,canvas,Color.BLACK);
         }
-
     }
-
-
-
-
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -430,12 +309,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        /*if (isPlanDynamic){
-            if (textToSpeech != null) {
-                textToSpeech.stop();
-                textToSpeech.shutdown();
-            }
-        }*/
         drawingThread.keepDrawing = false;
         boolean joined = false;
         while (!joined){
@@ -448,7 +321,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-
     public Graph getGraph() {
         return graph;
     }
@@ -458,54 +330,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         return longueurTrajet;
     }
 
-    /*@Override
-    public void onInit(int status) {
-
-        if (status == TextToSpeech.SUCCESS) {
-
-            int result = textToSpeech.setLanguage(currentSpokenLang);
-
-            // If language data or a specific language isn't available error
-            if (result == TextToSpeech.LANG_MISSING_DATA
-                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(context, "Language Not Supported", Toast.LENGTH_SHORT).show();
-            }
-
-        } else {
-            Toast.makeText(context, "Text To Speech Failed", Toast.LENGTH_SHORT).show();
-        }
-
-    }*/
-
-    /*@Override
-    public boolean onTouch(View v, MotionEvent event) {
-        //switch (event.getAction()){
-            //case MotionEvent.ACTION_DOWN:
-        synchronized (getHolder()){
-                float x = event.getX();
-                float y = event.getY();
-                if (backButton.btn_rect.contains(x, y))
-                {
-                    Intent intent = new Intent(context,DestinationActivity.class);
-                    context.startActivity(intent);
-                }
-                if (ttsButton.btn_rect.contains(x, y))
-                {
-                    if (isPlanDynamic){
-                        textToSpeech.setLanguage(currentSpokenLang);
-                        textToSpeech.speak(cheminSpeech,TextToSpeech.QUEUE_FLUSH, null);
-                    }
-                }
-        }
-            // handle on touch here
-        return true;
-    }*/
-
-
+    // classe interne, thread de l'affichage
     private class DrawingThread extends Thread {
         boolean keepDrawing = true;
-
-
         @Override
         public void run() {
             while (keepDrawing){

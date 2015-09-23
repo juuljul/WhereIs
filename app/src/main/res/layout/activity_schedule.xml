@@ -8,36 +8,11 @@
     android:weightSum="100"
     tools:context="com.abcd.projetcnam.ScheduleActivity">
 
-    <!--
-    <TextView
-        android:id="@+id/scheduleText"
-        android:textColor="#00AAAA"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go back to the Schedule Planner"
-        android:id="@+id/btn"
-        android:onClick="goToSchedulePlanner"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />-->
-
-
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:id="@+id/listView"
         android:layout_weight="90"/>
-        <!--android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"-->
-
 
 
     <Button
@@ -49,8 +24,5 @@
         android:id="@+id/buttonAdd"
         android:layout_gravity="center_horizontal"
         android:onClick="goToSchedulePlanner"/>
-        <!--android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp" />-->
 
 </LinearLayout>

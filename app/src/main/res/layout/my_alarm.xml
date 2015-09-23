@@ -3,7 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,14 +45,12 @@
         android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal" />
 
-
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-
         />
 
     <TextView
@@ -65,7 +62,6 @@
         android:layout_marginBottom="10dp"
         android:layout_gravity="center_horizontal" />
 
-
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,7 +69,6 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/toggleAlarm" android:checked="false"
         android:textOff="Non" android:textOn="Oui"/>
-
 
     <Button
         style="@style/bluebutton"
@@ -89,7 +84,5 @@
         android:id="@+id/buttonData"
         android:onClick="visitData"
         android:layout_gravity="center_horizontal" />
-
-
 
 </LinearLayout>

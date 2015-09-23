@@ -11,20 +11,25 @@ public class Node {
     int index;
     String roomName;
     float x,y;
-    boolean red, green, blue = false;
+    // boolean à true lorsque le noeud fait partie du trajet minimal qu'on recherche
+    boolean green = false;
+    // tableau des noeuds adjacents
     ArrayList <Integer> neighboursIndex= new ArrayList<Integer>();
+    // tableau des arêtes adjacentes
     ArrayList <Edge> edges = new  ArrayList <Edge>();
+
+    // variables utilisées pour l'algorithme de Dijkstra dans la classe Graph
     double distanceFromOrigin;
     int previousIndex;
     boolean visited, minFound = false;
 
-    //public Node(int index, Edge[] edgesGraph) {
+
     public Node(int index, String roomName, float x, float y, Edge[] edgesGraph) {
         this.index= index;
         this.roomName=roomName;
         this.x = x;
         this.y = y ;
-
+        // trouve les arêtes adjacentes et les ajoute à l'Arraylist edges
         for (Edge e : edgesGraph){
             if (e.getFromNodeIndex() == index){
                 edges.add(e);
@@ -37,13 +42,6 @@ public class Node {
         }
     }
 
-    public boolean isRed() {
-        return red;
-    }
-
-    public void setRed(boolean red) {
-        this.red = red;
-    }
 
     public boolean isGreen() {
         return green;
@@ -51,14 +49,6 @@ public class Node {
 
     public void setGreen(boolean green) {
         this.green = green;
-    }
-
-    public boolean isBlue() {
-        return blue;
-    }
-
-    public void setBlue(boolean blue) {
-        this.blue = blue;
     }
 
     public int getIndex() {
@@ -73,16 +63,8 @@ public class Node {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public float getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public ArrayList<Edge> getEdges() {
