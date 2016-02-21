@@ -1,11 +1,13 @@
 package com.abcd.projetcnam;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 
@@ -49,6 +51,6 @@ public class ScheduleActivity extends ActionBarActivity {
 
     public void goToSchedulePlanner(View view) {
         Intent intent = new Intent(this, MyAlarm.class);
-        startActivity(intent);
+        startActivityForResult(intent,1);
     }
 }

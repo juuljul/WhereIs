@@ -8,6 +8,9 @@
     <string name="room_to_reach_text">Enter the room you want to reach</string>
     <string name="title_activity_schedule">ScheduleActivity</string>
     <string name="title_activity_destination">DestinationActivity</string>
+
+    <string name="open">open</string>
+    <string name="close">close</string>
     
     <string-array name="salles">
         <item>1</item>

@@ -60,10 +60,12 @@ public class TrajetActivity extends Activity implements TextToSpeech.OnInitListe
 
         ttsBtn = new Button(this);
         ttsBtn.setText("Ecouter le chemin détaillé");
+        ttsBtn.setPadding(0,0,0,0);
         ttsBtn.setBackgroundResource(R.drawable.btn_degrade_blanc);
 
         backBtn = new Button(this);
         backBtn.setText("Rechercher un autre trajet");
+        backBtn.setPadding(0,0,0,0);
         backBtn.setBackgroundResource(R.drawable.btn_degrade_blanc);
 
         // parametres qui seront appliqués aux deux boutons

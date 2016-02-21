@@ -77,12 +77,12 @@
         android:layout_marginBottom="30dp"
         android:onClick="registerData"
         android:layout_gravity="center_horizontal" />
-
+<!--
     <Button
         style="@style/bluebutton.petit"
         android:text="RETOUR A L'EMPLOI DU TEMPS"
         android:id="@+id/buttonData"
         android:onClick="visitData"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal" /> -->
 
 </LinearLayout>

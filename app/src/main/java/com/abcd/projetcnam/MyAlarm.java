@@ -66,7 +66,6 @@ public class MyAlarm extends Activity
     }
 
 
-
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet( DatePicker view, int year, int monthOfYear, int dayOfMonth ) {
@@ -121,7 +120,8 @@ public class MyAlarm extends Activity
             long timeAlarm = cal.getTimeInMillis()-2*3600*1000;
             alarmManager.set(AlarmManager.RTC, timeAlarm, pendingIntent);
         }
-        Toast.makeText(this, "L'évènement a été ajouté à l'emploi du temps",Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "L'évènement a été ajouté à l'emploi du temps",Toast.LENGTH_LONG).show();
+        this.finish();
     }
 
     public void visitData(View view) {

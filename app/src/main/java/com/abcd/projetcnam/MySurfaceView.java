@@ -272,6 +272,11 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         paint.setColor(Color.parseColor("#C0F4FF"));
         canvas.drawPaint(paint);
         paint.setColor(Color.BLACK);
+        paint.setTextSize(30);
+        canvas.drawText("|Entrée|", getWidth() * 16 / 48, getHeight() * 25 / 26, paint);
+        canvas.drawText("Chapelle", getWidth()*39/48,getHeight()*4/26,paint);
+        paint.setTextSize(40);
+        canvas.drawText("Rue Saint-Martin", getWidth() * 25 / 48, getHeight() * 25 / 26, paint);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2f);
