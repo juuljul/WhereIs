@@ -1,50 +1,80 @@
 package com.abcd.projetcnam;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 
-public class LocationActivity extends ActionBarActivity {
+
+public class LocationActivity extends ActionBarActivity implements ChoixDepartFragment.OnDepartSelected, ChoixArriveeFragment.OnArriveeSelected {
 
     String roomDestination;
     int indexDestination;
-    Spinner spinnerDestination, spinnerLocation;
     ArrayAdapter arrayAdapter;
     Graph graph;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
+    String departText, arriveeText = " ";
+    boolean departChoisi, arriveeChoisie = false;
+    String findTrajetText = "Chercher le trajet le plus court de   à   ";
+    Button buttonTrajet;
+    Fragment choixDepartFragment;
+    ChoixArriveeFragment choixArriveeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
-        spinnerDestination = (Spinner) findViewById(R.id.spinnerDestination);
-        spinnerLocation = (Spinner) findViewById(R.id.spinnerLocation);
-        arrayAdapter= ArrayAdapter.createFromResource(this,R.array.salles, R.layout.spinner_layout);
-        spinnerDestination.setAdapter(arrayAdapter);
-        spinnerLocation.setAdapter(arrayAdapter);
+        buttonTrajet = (Button) findViewById(R.id.buttonTrajet);
+        buttonTrajet.setEnabled(false);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        choixDepartFragment = new ChoixDepartFragment();
+        //choixArriveeFragment = new ChoixArriveeFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.relativeLocation, choixDepartFragment);
+        //fragmentTransaction.add(R.id.relativeDestination,choixArriveeFragment);
+        fragmentTransaction.commit();
 
         graph = new Graph();
         Intent intent = getIntent();
         roomDestination = intent.getStringExtra("StopRoom");
 
+        choixArriveeFragment = (ChoixArriveeFragment) getFragmentManager().findFragmentById(R.id.fragmentDestination);
+
         if (roomDestination!=null){
             String destinationText = "Vous souhaitez rejoindre l'accès " + roomDestination+ " du Cnam";
             Toast.makeText(this,destinationText,Toast.LENGTH_LONG).show();
             indexDestination = graph.findIndex(roomDestination)-1;
-            spinnerDestination.setSelection(indexDestination);
+            choixArriveeFragment.setDestinationNumber(indexDestination);
+            arriveeChoisie = true;
+            arriveeText = roomDestination;
+            setTrajetText();
+            buttonTrajet.setText(findTrajetText);
         }
+    }
+
+
+    private void setTrajetText(){
+        findTrajetText = "Chercher le trajet le plus court de " + departText + " à " + arriveeText;
     }
 
     @Override
@@ -69,7 +99,7 @@ public class LocationActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void scanQR(View v) {
+    /*public void scanQR(View v) {
         try {
             Intent intent = new Intent(ACTION_SCAN);
             intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
@@ -129,18 +159,36 @@ public class LocationActivity extends ActionBarActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
-    }
+    }*/
 
     public void goToTrajet(View view) {
         Intent intent = new Intent(this, TrajetActivity.class);
-        intent.putExtra("StartRoom",spinnerLocation.getSelectedItem().toString());
-        intent.putExtra("StopRoom",spinnerDestination.getSelectedItem().toString());
+        intent.putExtra("StartRoom",departText);
+        intent.putExtra("StopRoom",arriveeText);
         intent.putExtra("DynamicPlan",true);
         startActivity(intent);
     }
 
-    public void goToSchedule(View view) {
-        Intent intent = new Intent(this,ScheduleActivity.class);
-        startActivity(intent);
+    public void updateButtonTrajet(){
+        setTrajetText();
+        buttonTrajet.setText(findTrajetText);
+        if (departChoisi && arriveeChoisie){
+            buttonTrajet.setBackgroundResource(R.drawable.btn_degrade_blanc);
+            buttonTrajet.setEnabled(true);
+        }
+    }
+
+    @Override
+    public void spinnerDepartSelect(String nomDepart) {
+        departChoisi = true;
+        departText = nomDepart;
+        updateButtonTrajet();
+    }
+
+    @Override
+    public void spinnerArriveeSelect(String nomArrivee) {
+        arriveeChoisie = true;
+        arriveeText = nomArrivee;
+        updateButtonTrajet();
     }
 }

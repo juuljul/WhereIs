@@ -22,33 +22,14 @@
         android:background="#ff029afb"
         android:layout_weight="45"
         >
-    <TextView
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quel accès recherchez-vous?"
-        android:id="@+id/textDestination"
-        android:textAppearance="?android:textAppearanceLarge"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinnerDestination"
-        android:layout_below="@id/textDestination"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        />
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragmentDestination"
+            android:name="com.abcd.projetcnam.ChoixArriveeFragment">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Consulter votre emploi du temps"
-        android:id="@+id/buttonSchedule"
-        android:layout_below="@+id/spinnerDestination"
-        android:onClick="goToSchedule"
-        android:layout_centerHorizontal="true" />
+        </fragment>
 
     </RelativeLayout>
 
@@ -59,33 +40,6 @@
         android:layout_below="@id/relativeDestination"
         android:background="#ff9dff7d"
         android:layout_weight="45">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Devant quel accès vous situez-vous ? (Entrée = 1)"
-        android:textAppearance="?android:textAppearanceLarge"
-        android:id="@+id/textLocation"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="37dp" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinnerLocation"
-        android:layout_below="@id/textLocation"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scanner votre localisation"
-        android:id="@+id/buttonScan"
-        android:layout_below="@+id/spinnerLocation"
-        android:onClick="scanQR"
-        android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 
@@ -98,10 +52,9 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="Calculer le trajet le plus court"
+        android:text="Calculer le trajet le plus court de  à  "
         android:id="@+id/buttonTrajet"
         android:onClick="goToTrajet"
-        android:background="@drawable/btn_degrade_blanc"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

@@ -15,6 +15,8 @@ public class ScheduleActivity extends ActionBarActivity {
 
     ListView listView;
     MyBaseAdapter myBaseAdapter;
+    public static final int AJOUTER_EVENEMENT_CODE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,16 @@ public class ScheduleActivity extends ActionBarActivity {
 
     public void goToSchedulePlanner(View view) {
         Intent intent = new Intent(this, MyAlarm.class);
-        startActivityForResult(intent,1);
+        startActivityForResult(intent,AJOUTER_EVENEMENT_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AJOUTER_EVENEMENT_CODE){
+            if (RESULT_OK == resultCode){
+                myBaseAdapter = new MyBaseAdapter(this);
+                listView.setAdapter(myBaseAdapter);
+            }
+        }
     }
 }
