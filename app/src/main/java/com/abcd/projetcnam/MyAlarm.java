@@ -45,6 +45,10 @@ public class MyAlarm extends Activity
     ArrayList <Calendar> calendarArrayList = new ArrayList<>();
     DbHelperAdapter dbAdapter;
 
+    public final static String MATIERE_KEY="matiere_key";
+    public final static String HEURE_KEY="heure_key";
+    public final static String NUM_SALLE_KEY="num_salle_key";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -104,10 +108,10 @@ public class MyAlarm extends Activity
     }
 
     public void registerData(View view) {
-        dbAdapter = new DbHelperAdapter(this);
+        /*dbAdapter = new DbHelperAdapter(this);
         //On ajoute l'évènement à la base de données
-        dbAdapter.insertData(editMatiere.getText().toString(),spinner.getSelectedItem().toString(),
-                editDate.getText().toString());
+        dbAdapter.insertData(editMatiere.getText().toString(), spinner.getSelectedItem().toString(),
+                editDate.getText().toString());*/
 
         // Si le toggleAlarm est enclenché on ajoute une alerte 2 heures avant l'évènement
         if (toggleAlarm.isChecked()){
@@ -121,6 +125,10 @@ public class MyAlarm extends Activity
             alarmManager.set(AlarmManager.RTC, timeAlarm, pendingIntent);
         }
         // Toast.makeText(this, "L'évènement a été ajouté à l'emploi du temps",Toast.LENGTH_LONG).show();
+        getIntent().putExtra(MATIERE_KEY,editMatiere.getText().toString());
+        getIntent().putExtra(HEURE_KEY,editDate.getText().toString());
+        getIntent().putExtra(NUM_SALLE_KEY,spinner.getSelectedItem().toString());
+        setResult(RESULT_OK,getIntent());
         this.finish();
     }
 

@@ -30,8 +30,8 @@ public class LocationActivity extends ActionBarActivity implements ChoixDepartFr
     int indexDestination;
     ArrayAdapter arrayAdapter;
     Graph graph;
-    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-    String departText, arriveeText = " ";
+    //static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
+    String departText, arriveeText = "...";
     boolean departChoisi, arriveeChoisie = false;
     String findTrajetText = "Chercher le trajet le plus court de   à   ";
     Button buttonTrajet;

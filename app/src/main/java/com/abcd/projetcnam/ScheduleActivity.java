@@ -60,6 +60,9 @@ public class ScheduleActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AJOUTER_EVENEMENT_CODE){
             if (RESULT_OK == resultCode){
+                DbHelperAdapter dbHelperAdapter = new DbHelperAdapter(getApplicationContext());
+                dbHelperAdapter.insertData(data.getStringExtra(MyAlarm.MATIERE_KEY),data.getStringExtra(MyAlarm.NUM_SALLE_KEY),
+                        data.getStringExtra(MyAlarm.HEURE_KEY));
                 myBaseAdapter = new MyBaseAdapter(this);
                 listView.setAdapter(myBaseAdapter);
             }
