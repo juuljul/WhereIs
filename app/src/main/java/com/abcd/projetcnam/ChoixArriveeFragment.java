@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
 
 
 /**
@@ -24,6 +27,9 @@ public class ChoixArriveeFragment extends Fragment {
     ArrayAdapter arrayAdapter;
     OnArriveeSelected onArriveeSelected;
     Button buttonSchedule;
+    Graph graph;
+
+    TextView textDeTest;
 
     public ChoixArriveeFragment() {
         // Required empty public constructor
@@ -39,7 +45,7 @@ public class ChoixArriveeFragment extends Fragment {
         }
     }
 
-
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,12 +73,34 @@ public class ChoixArriveeFragment extends Fragment {
             }
         });
 
+        textDeTest = (TextView) view.findViewById(R.id.textDeTest);
+
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+       // BusStation.getBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+       // BusStation.getBus().unregister(this);
+    }
+
+    /*@Subscribe
+    public void recievedMessage(Message message){
+        graph = new Graph();
+        int indexDestination = graph.findIndex(message.getMsg())-1;
+        spinnerDestination.setSelection(indexDestination);
+        textDeTest.setText("L'acces de destination choisi a pour numero" + message.getMsg());
+    }*/
+
     public void setDestinationNumber(int destinationNumber){
-        spinnerDestination.setSelection(destinationNumber,true);
+        spinnerDestination.setSelection(destinationNumber, true);
     }
 
     public interface OnArriveeSelected{

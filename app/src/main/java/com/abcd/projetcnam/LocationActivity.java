@@ -31,7 +31,8 @@ public class LocationActivity extends ActionBarActivity implements ChoixDepartFr
     ArrayAdapter arrayAdapter;
     Graph graph;
     //static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-    String departText, arriveeText = "...";
+    String departText ="...";
+    String arriveeText = "...";
     boolean departChoisi, arriveeChoisie = false;
     String findTrajetText = "Chercher le trajet le plus court de   à   ";
     Button buttonTrajet;
@@ -51,7 +52,7 @@ public class LocationActivity extends ActionBarActivity implements ChoixDepartFr
         //choixArriveeFragment = new ChoixArriveeFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.relativeLocation, choixDepartFragment);
-        //fragmentTransaction.add(R.id.relativeDestination,choixArriveeFragment);
+        //fragmentTransaction.add(R.id.relativeDestination, choixArriveeFragment);
         fragmentTransaction.commit();
 
         graph = new Graph();
@@ -62,8 +63,9 @@ public class LocationActivity extends ActionBarActivity implements ChoixDepartFr
 
         if (roomDestination!=null){
             String destinationText = "Vous souhaitez rejoindre l'accès " + roomDestination+ " du Cnam";
-            Toast.makeText(this,destinationText,Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,destinationText,Toast.LENGTH_LONG).show();
             indexDestination = graph.findIndex(roomDestination)-1;
+            //BusStation.getBus().post(new Message(roomDestination));
             choixArriveeFragment.setDestinationNumber(indexDestination);
             arriveeChoisie = true;
             arriveeText = roomDestination;

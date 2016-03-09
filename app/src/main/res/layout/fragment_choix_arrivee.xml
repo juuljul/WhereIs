@@ -45,4 +45,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"/>
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textDeTest"
+        android:text="Test pour l'import de destination"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        />
+
 </RelativeLayout>

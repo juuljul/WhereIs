@@ -7,9 +7,14 @@ import android.widget.Toast;
  * Created by julien on 01/05/2015.
  */
 public class Message {
+    private String msg;
 
-    public static void message (Context context, String s){
-        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+    public Message(String msg) {
+        this.msg = msg;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
 }

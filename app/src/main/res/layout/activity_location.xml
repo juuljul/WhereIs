@@ -30,7 +30,6 @@
             android:name="com.abcd.projetcnam.ChoixArriveeFragment">
 
         </fragment>
-
     </RelativeLayout>
 
     <RelativeLayout
